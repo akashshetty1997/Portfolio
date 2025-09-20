@@ -1,0 +1,125 @@
+{
+  "sectionTitle": "Skills & Technologies",
+  "sectionSubtitle": "A comprehensive toolkit for building modern applications",
+  "categories": {
+    "Frontend & Mobile": {
+      "icon": "🎨",
+      "skills": [
+        "React.js",
+        "Next.js",
+        "Vue.js",
+        "Nuxt.js",
+        "Flutter",
+        "React Native",
+        "TypeScript",
+        "JavaScript (ES6+)",
+        "Dart",
+        "HTML5/CSS3",
+        "Tailwind CSS",
+        "Material-UI",
+        "Redux",
+        "Vuex",
+        "Zustand",
+        "Framer Motion",
+        "SASS/SCSS",
+        "Responsive Design",
+        "PWA"
+      ]
+    },
+    "Backend": {
+      "icon": "⚙️",
+      "skills": [
+        "Node.js",
+        "Python",
+        "FastAPI",
+        "Express.js",
+        "Django",
+        "Flask",
+        "GraphQL",
+        "REST APIs",
+        "WebSockets",
+        "JWT Auth",
+        "OAuth 2.0",
+        "Microservices",
+        "Serverless",
+        "API Gateway",
+        "Message Queues"
+      ]
+    },
+    "Database & Storage": {
+      "icon": "🗄️",
+      "skills": [
+        "PostgreSQL",
+        "MongoDB",
+        "MySQL",
+        "Redis",
+        "Elasticsearch",
+        "Firebase Firestore",
+        "DynamoDB",
+        "S3",
+        "SQLite",
+        "Prisma ORM",
+        "Mongoose",
+        "Database Design",
+        "Query Optimization"
+      ]
+    },
+    "Cloud & DevOps": {
+      "icon": "☁️",
+      "skills": [
+        "AWS (EC2, S3, Lambda)",
+        "Google Cloud Platform",
+        "Vercel",
+        "Netlify",
+        "Docker",
+        "Kubernetes",
+        "CI/CD Pipelines",
+        "GitHub Actions",
+        "Jenkins",
+        "Nginx",
+        "CloudFlare",
+        "Monitoring (Sentry)",
+        "Load Balancing",
+        "SSL/TLS"
+      ]
+    },
+    "Testing & Quality": {
+      "icon": "✅",
+      "skills": [
+        "Jest",
+        "React Testing Library",
+        "Cypress",
+        "Playwright",
+        "PyTest",
+        "Unit Testing",
+        "Integration Testing",
+        "E2E Testing",
+        "TDD/BDD",
+        "Code Reviews",
+        "ESLint",
+        "Prettier",
+        "SonarQube"
+      ]
+    },
+    "Tools & Workflow": {
+      "icon": "🛠️",
+      "skills": [
+        "Git & GitHub",
+        "VS Code",
+        "Figma",
+        "Postman",
+        "Jira",
+        "Agile/Scrum",
+        "Linux/Unix",
+        "Webpack",
+        "Vite",
+        "npm/yarn/pnpm",
+        "Chrome DevTools",
+        "Xcode",
+        "Android Studio",
+        "Notion",
+        "Copilot"
+      ]
+    }
+  }
+}

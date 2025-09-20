@@ -1,0 +1,38 @@
+// src/scripts/create-sound-placeholders.ts
+import fs from 'fs';
+import path from 'path';
+
+const soundsDir = path.join(process.cwd(), 'public', 'sounds');
+
+// Create sounds directory if it doesn't exist
+if (!fs.existsSync(soundsDir)) {
+  fs.mkdirSync(soundsDir, { recursive: true });
+}
+
+// Create a simple silent MP3 file (base64 encoded silent mp3)
+const silentMp3 = Buffer.from(
+  'SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABhgC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7v///////////////////////////////////////////8AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAQKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//tQxAAOAAAGkAAAAIAAANIAAAARAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//tQxB4P8AAAaQAAAAgAAA0gAAABEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==',
+  'base64'
+);
+
+const soundFiles = [
+  'click.mp3',
+  'hover.mp3',
+  'success.mp3',
+  'error.mp3',
+  'notification.mp3',
+  'background-music.mp3'
+];
+
+soundFiles.forEach(filename => {
+  const filePath = path.join(soundsDir, filename);
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, silentMp3);
+    console.log(`✓ Created placeholder: ${filename}`);
+  } else {
+    console.log(`⚠ File already exists: ${filename}`);
+  }
+});
+
+console.log('\n✅ Sound placeholder files created!');
+console.log('Replace these with actual sound files for the full experience.');

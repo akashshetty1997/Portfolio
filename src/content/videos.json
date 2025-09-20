@@ -1,0 +1,33 @@
+{
+  "sectionTitle": "Get to Know Me Better",
+  "sectionSubtitle": "Watch my video introductions to understand my journey, skills, and passion for development",
+  "videos": [
+    {
+      "id": "about-me",
+      "title": "Tell Me About Yourself",
+      "duration": "90 seconds",
+      "videoSrc": "/videos/about-me.mp4",
+      "transcript": [
+        {
+          "time": 0,
+          "text": "Hi! I'm Akash Shetty, a Full Stack Developer with over 5 years of experience.",
+          "highlight": true
+        },
+        {
+          "time": 5,
+          "text": "I'm currently pursuing my Master's in Computer Science at Northeastern University in Boston."
+        }
+      ],
+      "chapters": [
+        {
+          "time": 0,
+          "title": "Introduction"
+        },
+        {
+          "time": 12,
+          "title": "Technical Skills"
+        }
+      ]
+    }
+  ]
+}

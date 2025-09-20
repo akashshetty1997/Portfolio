@@ -1,0 +1,71 @@
+{
+  "sectionTitle": "Professional Experience",
+  "sectionSubtitle": "4+ years of building scalable applications and leading development teams",
+  "items": [
+    {
+      "title": "Frontend Developer",
+      "company": "Goodpass",
+      "location": "Bengaluru, India",
+      "duration": "Mar 2024 - Aug 2024",
+      "description": [
+        "Developed front-end solutions by analyzing requirements, designing, coding, and testing for seamless integration",
+        "Collaborated with analysts to break down requirements into actionable tasks, improving team efficiency",
+        "Built and maintained microservices using Node.js and Express.js, enhancing performance and scalability"
+      ],
+      "technologies": [
+        "React",
+        "Node.js",
+        "Express.js",
+        "Microservices"
+      ],
+      "achievements": {
+        "teamEfficiency": "Improved team efficiency by 30%",
+        "codeQuality": "Maintained 95% code coverage"
+      }
+    },
+    {
+      "title": "Software Engineer",
+      "company": "SoftXways ApS",
+      "location": "Bengaluru, India",
+      "duration": "Jun 2021 - Feb 2024",
+      "description": [
+        "Created and integrated frontend components for a project management solution, enabling monitoring and user management",
+        "Reduced page load time by 20% through code optimization and caching strategies",
+        "Improved user engagement by 40% by enhancing interactivity using Vue.js and Vuex",
+        "Conducted code reviews to ensure coding standards and best practices"
+      ],
+      "technologies": [
+        "Vue.js",
+        "Vuex",
+        "JavaScript",
+        "Performance Optimization"
+      ],
+      "achievements": {
+        "performance": "20% faster page loads",
+        "engagement": "40% increase in user engagement"
+      }
+    },
+    {
+      "title": "Software Engineer",
+      "company": "Byte Academy",
+      "location": "New York, USA",
+      "duration": "Dec 2019 - Feb 2021",
+      "description": [
+        "Implemented an interactive dashboard using Vue and Nuxt, enabling real-time data analysis",
+        "Developed applications using Python, Flutter, React, and Vue.js, integrating with backend systems",
+        "Practiced Agile methodology, Git version control, and Jira defect tracking"
+      ],
+      "technologies": [
+        "Vue.js",
+        "Nuxt.js",
+        "Python",
+        "Flutter",
+        "React"
+      ],
+      "achievements": {
+        "dashboards": "Built 5+ real-time dashboards",
+        "projects": "Delivered 10+ client projects"
+      }
+    }
+  ]
+}

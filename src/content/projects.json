@@ -1,0 +1,88 @@
+{
+  "sectionTitle": "Featured Projects",
+  "sectionSubtitle": "Real products solving real problems – from conception to production",
+  "items": [
+    {
+      "title": "Supatrack",
+      "description": "The nutrition app that actually understands what you're eating – snap a photo, get insights",
+      "longDescription": "Started as a 'what if we could make calorie counting not suck?' conversation. Now it's a full-scale mobile app with ML-powered food recognition that actually works. Leading a team of 4 developers, we're building something people genuinely want to use daily – not just download and forget.",
+      "duration": "May 2024 - Present",
+      "role": "Lead Developer & Architect",
+      "highlights": [
+        "Architected the entire system from scratch – picked the tech stack, designed the database schema, and set up CI/CD pipelines that actually prevent 3 AM disasters",
+        "Built a FastAPI backend that handles 10,000+ daily requests without breaking a sweat (load tested with Locust to be sure)",
+        "Implemented smart caching with Redis that cut our API response times by 70% – because nobody likes waiting for their food to log",
+        "Integrated TensorFlow Lite models directly into Flutter for offline food recognition – works even in your gym's terrible WiFi",
+        "Deployed to both Google Play Store and Apple App Store, dealing with their review processes (iOS review taught me patience)",
+        "Set up real production monitoring with Sentry and CloudWatch – we know about bugs before users report them",
+        "Mentored 2 junior developers who now handle features independently (proud teacher moment)"
+      ],
+      "technologies": [
+        "Flutter",
+        "Dart",
+        "FastAPI",
+        "MongoDB",
+        "PostgreSQL",
+        "Python",
+        "Redis",
+        "AWS EC2",
+        "AWS S3",
+        "CloudFront CDN",
+        "Docker",
+        "Kubernetes",
+        "TensorFlow Lite",
+        "ML/AI",
+        "Firebase Auth",
+        "Firebase Analytics",
+        "Stripe Payments",
+        "OneSignal Push Notifications",
+        "Sentry",
+        "CloudWatch",
+        "GitHub Actions CI/CD",
+        "Figma",
+        "Jest Testing",
+        "Locust Load Testing",
+        "Google Play Console",
+        "Apple App Store Connect",
+        "TestFlight",
+        "Nginx"
+      ],
+      "github": "https://github.com/akashshetty1997/Supatrack",
+      "live": "https://supatrack.app/",
+      "image": "/images/Supatrack.png",
+      "screenshots": [
+        "/images/Supatrack-1.png",
+        "/images/Supatrack-2.png",
+        "/images/Supatrack-3.png"
+      ],
+      "isprivate": true
+    },
+    {
+      "title": "Open Food Facts Contributions",
+      "description": "Making the world's food database better, one pull request at a time",
+      "longDescription": "Jumped into Open Food Facts because I believe nutrition data should be free and accessible. Started by fixing a tiny UI bug, now I'm neck-deep in improving how the platform recognizes and categorizes food products. It's Wikipedia for food, and I'm helping make it better.",
+      "duration": "Feb 2024 - Present",
+      "role": "Open Source Contributor",
+      "highlights": [
+        "Fixed that annoying search bar that wouldn't stay sticky on mobile – small fix, big UX win",
+        "Improved food barcode scanning accuracy by 15% through better error handling and user feedback",
+        "Added dark mode support because developers have eyes too (most popular PR to date)",
+        "Collaborated with contributors from 12 different countries – code reviews in broken English are surprisingly effective"
+      ],
+      "technologies": [
+        "Svelte",
+        "TypeScript",
+        "Tailwind CSS",
+        "Node.js",
+        "MongoDB",
+        "Jest",
+        "GitHub Actions"
+      ],
+      "github": "https://github.com/openfoodfacts",
+      "live": "https://world.openfoodfacts.org",
+      "image": "/images/openfoodfacts.png",
+      "screenshots": [],
+       "isprivate": false
+    }
+  ]
+}

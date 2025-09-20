@@ -1,0 +1,41 @@
+{
+  "name": "Akash Shridhar Shetty",
+  "firstName": "Akash",
+  "lastName": "Shetty",
+  "email": "shridharshetty.a@northeastern.edu",
+  "phone": "617-694-1895",
+  "location": "Boston, MA",
+  "tagline": "Turning complex problems into simple, impactful solutions",
+  "status": "Available for opportunities",
+  "github": "https://github.com/akashshetty1997",
+  "linkedin": "https://linkedin.com/in/akashshetty1997",
+  "resume": "/documents/akash_shetty_resume.pdf",
+  "aboutMe": {
+    "title": "Passionate Developer & Problem Solver",
+    "subtitle": "Full Stack Developer with a knack for creating elegant solutions to complex problems.",
+    "description": "Currently pursuing my Master's degree while building innovative applications that make a difference.",
+    "summary": [
+      "Five years ago in India, I wrote my first function. Today in Boston, I'm architecting entire systems while pursuing my MS at Northeastern. The journey? Flutter apps, React dashboards, Python APIs, and enough debugging to question reality.",
+
+      "What drives me? That moment when messy requirements become elegant code. When users say 'this just makes sense.' When junior devs understand my documentation without asking questions (rare, but magical).",
+
+      "Currently obsessed with two things: making nutrition tracking actually useful (building SuperTrack) and proving that grad school and side projects can coexist. Spoiler: they can, but sleep is optional."
+    ],
+    "quickFacts": [
+      "4+ Years Experience",
+      "Flutter Enthusiast",
+      "Performance Optimizer",
+      "Open Source Contributor",
+      "Detail-Oriented",
+      "Problem Solver",
+      "Continuous Learner",
+      "Coffee Powered"
+    ]
+  },
+  "typingAnimationTexts": [
+    "Full Stack Developer",
+    "Mobile App Team Lead",
+    "Problem Solver",
+    "MS CS Student at Northeastern"
+  ]
+}

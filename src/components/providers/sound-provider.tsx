@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 interface SoundContextType {
   isSoundEnabled: boolean;
   toggleSound: () => void;
-  playSound: (soundType: "click" | "hover" | "success" | "error" | "notification") => void;
+  playSound: (
+    soundType: "click" | "hover" | "success" | "error" | "notification"
+  ) => void;
   setBackgroundVolume: (volume: number) => void;
   backgroundVolume: number;
 }
@@ -25,13 +27,14 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
   const toggleSound = () => {
     // Do nothing when disabled
     if (!SOUND_FEATURE_ENABLED) return;
-    
+
     const newState = !isSoundEnabled;
     setIsSoundEnabled(newState);
     localStorage.setItem("soundEnabled", newState.toString());
   };
 
-  const playSound = (_soundType: string) => {
+  const playSound = (_: string) => {
+    // ← Changed from _soundType to just _
     // Do nothing when disabled
     if (!SOUND_FEATURE_ENABLED) return;
   };
@@ -53,7 +56,7 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      
+
       {/* Hide Sound Toggle Button when disabled */}
       {SOUND_FEATURE_ENABLED && (
         <Button

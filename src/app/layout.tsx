@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SoundProvider } from "@/components/providers/sound-provider";
 import { LoadingBar } from "@/components/effects/loading-bar";
@@ -8,16 +8,16 @@ import { CustomCursor } from "@/components/effects/custom-cursor";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+const inter = Inter({
+  subsets: ["latin"],
   variable: "--font-geist-sans",
-  weight: "100 900",
+  display: "swap",
 });
 
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
   variable: "--font-geist-mono",
-  weight: "100 900",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -86,32 +86,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className="dark">
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Prevent FOUC (Flash of Unstyled Content)
-                const theme = localStorage.getItem('theme') || 'dark';
-                if (theme === 'dark') {
-                  document.documentElement.classList.add('dark');
-                }
+                // Always ensure dark mode is active
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
               })();
             `,
           }}
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased min-h-screen`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen dark`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          disableTransitionOnChange={false}
-          forcedTheme="dark"
-        >
+        <ThemeProvider>
           <SoundProvider>
             <LoadingBar />
             <CustomCursor />

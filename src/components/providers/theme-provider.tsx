@@ -2,9 +2,15 @@
 "use client";
 
 import * as React from "react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { type ThemeProviderProps } from "next-themes";
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
+  React.useEffect(() => {
+    // Always add dark class to the HTML element
+    document.documentElement.classList.add("dark");
+
+    // Store dark theme preference
+    localStorage.setItem("theme", "dark");
+  }, []);
+
+  return <>{children}</>;
 }

@@ -122,22 +122,7 @@ export function ExperienceSection() {
 
                       {/* Technologies - standardized */}
                       <div className="space-y-3">
-                        <div className="flex flex-wrap gap-1.5">
-                          {exp.technologies.slice(0, 5).map((tech, idx) => (
-                            <Badge 
-                              key={idx} 
-                              variant="secondary" 
-                              className="text-xs px-2 py-0.5"
-                            >
-                              {tech}
-                            </Badge>
-                          ))}
-                          {exp.technologies.length > 5 && (
-                            <Badge variant="outline" className="text-xs px-2 py-0.5">
-                              +{exp.technologies.length - 5}
-                            </Badge>
-                          )}
-                        </div>
+
 
                         {/* Achievements bar - standardized */}
                         {exp.achievements && (

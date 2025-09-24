@@ -15,11 +15,9 @@
     "subtitle": "Full Stack Developer with a knack for creating elegant solutions to complex problems.",
     "description": "Currently pursuing my Master's degree while building innovative applications that make a difference.",
     "summary": [
-      "Five years ago in India, I wrote my first function. Today in Boston, I'm architecting entire systems while pursuing my MS at Northeastern. The journey? Flutter apps, React dashboards, Python APIs, and enough debugging to question reality.",
+      "Five years ago in India, I wrote my first function. Today in Boston, I’m architecting full-stack systems while pursuing my MS at Northeastern. The path so far has been Flutter apps, React dashboards, Python APIs, TensorFlow models—and enough debugging sessions to make me question reality. What keeps me hooked is that moment when messy requirements turn into clean solutions and users say, “this just makes sense.”",
 
-      "What drives me? That moment when messy requirements become elegant code. When users say 'this just makes sense.' When junior devs understand my documentation without asking questions (rare, but magical).",
-
-      "Currently obsessed with two things: making nutrition tracking actually useful (building SuperTrack) and proving that grad school and side projects can coexist. Spoiler: they can, but sleep is optional."
+"Right now, I’m obsessed with making nutrition tracking actually useful (building Supatrack with ML-powered food recognition) and proving that grad school and side projects can coexist. Spoiler: they can—but only if you treat sleep as optional."
     ],
     "quickFacts": [
       "4+ Years Experience",
@@ -34,7 +32,7 @@
   },
   "typingAnimationTexts": [
     "Full Stack Developer",
-    "Mobile App Team Lead",
+    "Mobile App and Team Lead",
     "Problem Solver",
     "MS CS Student at Northeastern"
   ]

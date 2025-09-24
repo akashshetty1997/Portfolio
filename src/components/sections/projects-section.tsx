@@ -10,6 +10,7 @@ import {
   Calendar,
   User,
   ChevronRight,
+  ChevronLeft,
   X,
   Sparkles,
   Code2,
@@ -31,334 +32,346 @@ interface ProjectModalProps {
 
 function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   const { playClickSound, playHoverSound } = useSoundEffect();
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  
+  // Prioritize screenshots over main image
+  const allImages = project.screenshots && project.screenshots.length > 0 
+    ? project.screenshots 
+    : project.image 
+      ? [project.image]
+      : [];
+
+  // Calculate how many slides we need (2 images per slide)
+  const totalSlides = Math.ceil(allImages.length / 2);
+
+  const handlePrevSlide = () => {
+    playClickSound();
+    setCurrentSlideIndex((prev) => 
+      prev === 0 ? totalSlides - 1 : prev - 1
+    );
+  };
+
+  const handleNextSlide = () => {
+    playClickSound();
+    setCurrentSlideIndex((prev) => 
+      prev === totalSlides - 1 ? 0 : prev + 1
+    );
+  };
+
+  // Get the current pair of images to display
+  const getCurrentImages = () => {
+    const startIndex = currentSlideIndex * 2;
+    return allImages.slice(startIndex, startIndex + 2);
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-[95vw] md:max-w-7xl max-h-[95vh] p-0 overflow-hidden bg-gradient-to-br from-background/98 via-background/95 to-background/90 backdrop-blur-2xl border-0 shadow-2xl">
-            {/* Animated Background Effects */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <motion.div
-                className="absolute -top-20 -right-20 w-96 h-96 bg-gradient-to-br from-primary/20 to-accent/20 rounded-full blur-3xl"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 180, 360],
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-              <motion.div
-                className="absolute -bottom-20 -left-20 w-96 h-96 bg-gradient-to-tr from-accent/20 to-primary/20 rounded-full blur-3xl"
-                animate={{
-                  scale: [1.2, 1, 1.2],
-                  rotate: [360, 180, 0],
-                }}
-                transition={{
-                  duration: 25,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
-            </div>
-
-            {/* Glass morphism overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,oklch(0.35_0.15_280/0.1),transparent_70%),radial-gradient(ellipse_at_bottom_left,oklch(0.577_0.245_27.325/0.1),transparent_70%)] pointer-events-none" />
-
+          <DialogContent className="max-w-[95vw] md:max-w-7xl max-h-[90vh] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl">
             {/* Close Button */}
             <motion.button
               onClick={() => {
                 playClickSound();
                 onClose();
               }}
-              className="absolute top-4 right-4 z-50 p-3 rounded-2xl bg-white/10 dark:bg-black/10 backdrop-blur-xl border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all group"
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-background/80 backdrop-blur-xl border border-border/50 hover:bg-background/90 transition-all group"
               whileHover={{ scale: 1.05, rotate: 90 }}
               whileTap={{ scale: 0.95 }}
             >
-              <X className="w-5 h-5 text-foreground/80 group-hover:text-foreground transition-colors" />
+              <X className="w-4 h-4 text-foreground/80 group-hover:text-foreground transition-colors" />
             </motion.button>
 
-            {/* Content Container */}
-            <div className="relative flex flex-col lg:flex-row h-full">
-              {/* Left Side - Enhanced Image Gallery */}
+            {/* Content Container - 40/60 split */}
+            <div className="relative flex flex-col lg:flex-row h-full max-h-[90vh]">
+              {/* Left Side - Image Slider (40%) */}
               <motion.div 
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="lg:w-1/2 p-6 lg:p-10 bg-gradient-to-br from-primary/5 via-transparent to-accent/5"
+                className="lg:w-[40%] p-6 lg:p-8 bg-muted/30 flex flex-col justify-center"
               >
-                <div className="h-full flex flex-col justify-center space-y-6">
-                  {/* Project Title for Mobile */}
-                  <div className="lg:hidden mb-4">
-                    <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-                      {project.title}
-                    </h2>
+                {/* Project Title for Mobile */}
+                <div className="lg:hidden mb-4">
+                  <h2 className="text-2xl font-bold text-gradient">
+                    {project.title}
+                  </h2>
+                </div>
+
+                {/* Image Slider Container */}
+                <div className="relative">
+                  {/* Slider Viewport */}
+                  <div className="relative overflow-hidden rounded-xl bg-background/50 min-h-[300px]">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={currentSlideIndex}
+                        initial={{ x: 300, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: -300, opacity: 0 }}
+                        transition={{ 
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30
+                        }}
+                        className="h-full"
+                      >
+                        {allImages.length === 1 ? (
+                          /* Single image - full width */
+                          <div className="relative w-full h-[300px] lg:h-[400px]">
+                            <Image
+                              src={allImages[0]}
+                              alt={`${project.title} - Main Image`}
+                              fill
+                              className="object-contain p-4"
+                            />
+                            <div className="absolute bottom-3 right-3">
+                              <Badge variant="secondary" className="text-xs bg-background/80 backdrop-blur-sm">
+                                1 of 1
+                              </Badge>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Multiple images - grid layout */
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 p-2 h-[300px] lg:h-[400px]">
+                            {getCurrentImages().map((image, index) => (
+                              <div
+                                key={`${currentSlideIndex}-${index}`}
+                                className="relative bg-background/30 rounded-lg border border-border/20 overflow-hidden"
+                              >
+                                <Image
+                                  src={image}
+                                  alt={`${project.title} - Image ${currentSlideIndex * 2 + index + 1}`}
+                                  fill
+                                  className="object-contain p-2"
+                                />
+                                {/* Image number overlay */}
+                                <div className="absolute bottom-2 right-2">
+                                  <Badge variant="secondary" className="text-xs bg-background/80 backdrop-blur-sm">
+                                    {currentSlideIndex * 2 + index + 1}
+                                  </Badge>
+                                </div>
+                              </div>
+                            ))}
+                            {/* If odd number of images on last slide, fill the empty spot */}
+                            {getCurrentImages().length === 1 && currentSlideIndex === totalSlides - 1 && (
+                              <div className="relative bg-muted/20 rounded-lg border border-border/10 flex items-center justify-center">
+                                <div className="text-center">
+                                  <Layers className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
+                                  <p className="text-xs text-muted-foreground/50">No more images</p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
 
-                  {/* Main Image with Effects */}
-                  <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.4, type: "spring" }}
-                    className="relative group"
-                  >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-primary via-accent to-primary rounded-3xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity animate-gradient bg-[length:200%_auto]" />
-                    
-                    <div className="relative aspect-video bg-gradient-to-br from-background/50 to-background/30 rounded-2xl overflow-hidden shadow-2xl">
-                      {project.image ? (
-                        <>
-                          <Image
-                            src={project.screenshots?.[activeImageIndex] || project.image}
-                            alt={project.title}
-                            fill
-                            className="object-cover transition-transform duration-500"
-                          />
-                          {/* Glass overlay with gradient */}
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                          
-                          {/* Floating UI Elements */}
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="absolute bottom-4 left-4 flex gap-2"
-                          >
-                            <Badge className="bg-white/20 dark:bg-black/20 backdrop-blur-xl border-white/30 text-white">
-                              {project.role}
-                            </Badge>
-                          </motion.div>
-                        </>
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/10 to-accent/10">
-                          <Layers className="w-24 h-24 text-primary/30 animate-pulse" />
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-
-                  {/* Enhanced Thumbnail Gallery */}
-                  {project.screenshots && project.screenshots.length > 1 && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="flex gap-3 justify-center"
-                    >
-                      {project.screenshots.map((screenshot, index) => (
-                        <motion.button
-                          key={index}
-                          onClick={() => {
-                            playClickSound();
-                            setActiveImageIndex(index);
-                          }}
-                          onMouseEnter={playHoverSound}
-                          whileHover={{ scale: 1.1, y: -5 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={cn(
-                            "relative w-24 h-16 rounded-xl overflow-hidden transition-all duration-300",
-                            activeImageIndex === index
-                              ? "ring-2 ring-primary ring-offset-2 ring-offset-background shadow-xl"
-                              : "opacity-60 hover:opacity-100"
-                          )}
-                        >
-                          <Image
-                            src={screenshot}
-                            alt={`Screenshot ${index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                          {activeImageIndex === index && (
-                            <motion.div
-                              layoutId="activeThumb"
-                              className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent"
-                            />
-                          )}
-                        </motion.button>
-                      ))}
-                    </motion.div>
+                  {/* Navigation Arrows - Only show if more than 1 slide needed */}
+                  {allImages.length > 1 && totalSlides > 1 && (
+                    <>
+                      <button
+                        onClick={handlePrevSlide}
+                        onMouseEnter={playHoverSound}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/90 backdrop-blur-sm border border-border/50 hover:bg-background shadow-lg transition-all hover:scale-110"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      
+                      <button
+                        onClick={handleNextSlide}
+                        onMouseEnter={playHoverSound}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/90 backdrop-blur-sm border border-border/50 hover:bg-background shadow-lg transition-all hover:scale-110"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </>
                   )}
-
-                  {/* Floating Action Buttons */}
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="flex gap-4 justify-center"
-                  >
-                    {/* Only show GitHub button if project is not private */}
-                    {project.github && !project.isprivate && (
-                      <motion.button
-                        onClick={() => {
-                          playClickSound();
-                          window.open(project.github, "_blank");
-                        }}
-                        onMouseEnter={playHoverSound}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="group relative px-6 py-3 rounded-2xl bg-white/10 dark:bg-black/10 backdrop-blur-xl border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all overflow-hidden"
-                      >
-                        <span className="relative z-10 flex items-center gap-2 font-medium">
-                          <Github className="w-5 h-5" />
-                          View Code
-                        </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </motion.button>
-                    )}
-                    
-                    {/* Show private badge if project is private */}
-                    {project.isprivate && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="px-6 py-3 rounded-2xl bg-amber-500/10 dark:bg-amber-500/10 backdrop-blur-xl border border-amber-500/20 dark:border-amber-500/20"
-                      >
-                        <span className="flex items-center gap-2 font-medium text-amber-600 dark:text-amber-400">
-                          <Code2 className="w-5 h-5" />
-                          Private Repository
-                        </span>
-                      </motion.div>
-                    )}
-                    
-                    {project.live && (
-                      <motion.button
-                        onClick={() => {
-                          playClickSound();
-                          if (project.live) window.open(project.live, "_blank");
-                        }}
-                        onMouseEnter={playHoverSound}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="group relative px-6 py-3 rounded-2xl bg-gradient-to-r from-primary to-accent text-white font-medium overflow-hidden shadow-lg hover:shadow-xl transition-all"
-                      >
-                        <span className="relative z-10 flex items-center gap-2">
-                          <ExternalLink className="w-5 h-5" />
-                          Live Demo
-                        </span>
-                        <div className="absolute inset-0 bg-gradient-to-r from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </motion.button>
-                    )}
-                  </motion.div>
                 </div>
+
+                {/* Slide Indicators - Only show if multiple slides */}
+                {allImages.length > 2 && totalSlides > 1 && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex justify-center gap-2 mt-4"
+                  >
+                    {Array.from({ length: totalSlides }).map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          playClickSound();
+                          setCurrentSlideIndex(index);
+                        }}
+                        onMouseEnter={playHoverSound}
+                        className="group relative"
+                      >
+                        <div
+                          className={cn(
+                            "transition-all duration-300",
+                            currentSlideIndex === index
+                              ? "w-8 h-2 rounded-full bg-primary"
+                              : "w-2 h-2 rounded-full bg-primary/30 hover:bg-primary/50"
+                          )}
+                        />
+                        {/* Tooltip showing which images */}
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                          <Badge variant="secondary" className="text-xs whitespace-nowrap">
+                            Images {index * 2 + 1}-{Math.min(index * 2 + 2, allImages.length)}
+                          </Badge>
+                        </div>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+
+                {/* Image count info */}
+                {allImages.length > 1 && (
+                  <div className="text-center mt-3">
+                    <p className="text-xs text-muted-foreground">
+                      {allImages.length === 1 
+                        ? "1 image" 
+                        : totalSlides > 1 
+                          ? `Showing ${currentSlideIndex * 2 + 1}-${Math.min(currentSlideIndex * 2 + 2, allImages.length)} of ${allImages.length} images`
+                          : `${allImages.length} images`
+                      }
+                    </p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex gap-3 justify-center mt-6"
+                >
+                  {project.github && !project.isprivate && (
+                    <motion.button
+                      onClick={() => {
+                        playClickSound();
+                        window.open(project.github, "_blank");
+                      }}
+                      onMouseEnter={playHoverSound}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:bg-background/80 transition-all text-sm font-medium flex items-center gap-2"
+                    >
+                      <Github className="w-4 h-4" />
+                      <span>Code</span>
+                    </motion.button>
+                  )}
+                  
+                  {project.isprivate && (
+                    <div className="px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm font-medium flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                      <Code2 className="w-4 h-4" />
+                      <span>Private</span>
+                    </div>
+                  )}
+                  
+                  {project.live && (
+                    <motion.button
+                      onClick={() => {
+                        playClickSound();
+                        if (project.live) window.open(project.live, "_blank");
+                      }}
+                      onMouseEnter={playHoverSound}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-white text-sm font-medium flex items-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Live Demo</span>
+                    </motion.button>
+                  )}
+                </motion.div>
               </motion.div>
 
-              {/* Right Side - Enhanced Project Details */}
+              {/* Right Side - Project Details (60%) */}
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="lg:w-1/2 p-6 lg:p-10 overflow-y-auto max-h-[85vh] relative"
+                className="lg:w-[60%] p-6 lg:p-8 overflow-y-auto"
               >
-                <div className="space-y-8">
-                  {/* Title with Animated Gradient */}
+                <div className="space-y-6 max-w-2xl">
+                  {/* Title for Desktop */}
                   <div className="hidden lg:block">
                     <motion.h2 
                       initial={{ opacity: 0, y: -20 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]"
+                      className="text-3xl lg:text-4xl font-bold mb-3 text-gradient"
                     >
                       {project.title}
                     </motion.h2>
                     
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="flex flex-wrap gap-3"
-                    >
-                      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-primary/10 to-accent/10 backdrop-blur-sm">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">{project.duration}</span>
-                      </div>
-                      <div className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-accent/10 to-primary/10 backdrop-blur-sm">
-                        <User className="w-4 h-4 text-accent" />
-                        <span className="text-sm font-medium">{project.role}</span>
-                      </div>
-                    </motion.div>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="text-xs">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {project.duration}
+                      </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        <User className="w-3 h-3 mr-1" />
+                        {project.role}
+                      </Badge>
+                    </div>
                   </div>
 
-                  {/* Enhanced Overview */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="space-y-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20">
-                        <Sparkles className="w-5 h-5 text-primary" />
+                  {/* Overview */}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div className="p-1.5 rounded-lg bg-primary/10">
+                        <Sparkles className="w-4 h-4 text-primary" />
                       </div>
-                      <h3 className="text-xl font-bold">Overview</h3>
+                      <h3 className="text-lg font-semibold">Overview</h3>
                     </div>
-                    <p className="text-muted-foreground leading-relaxed text-lg">
+                    <p className="text-muted-foreground leading-relaxed">
                       {project.longDescription}
                     </p>
-                  </motion.div>
+                  </div>
 
-                  {/* Enhanced Highlights with Cards */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="space-y-4"
-                  >
-                    <h3 className="text-xl font-bold">Key Achievements</h3>
-                    <div className="space-y-3">
+                  {/* Key Achievements */}
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Key Achievements</h3>
+                    <div className="space-y-2">
                       {project.highlights.map((highlight, index) => (
                         <motion.div
                           key={index}
-                          initial={{ opacity: 0, x: -30 }}
+                          initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.4 + index * 0.07 }}
-                          whileHover={{ x: 10 }}
-                          className="group p-4 rounded-2xl bg-gradient-to-r from-background/50 to-background/30 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all"
+                          transition={{ delay: 0.4 + index * 0.05 }}
+                          className="flex items-start gap-2 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
                         >
-                          <div className="flex items-start gap-3">
-                            <div className="mt-0.5 p-1.5 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 group-hover:from-primary/30 group-hover:to-accent/30 transition-colors">
-                              <ChevronRight className="w-4 h-4 text-primary" />
-                            </div>
-                            <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                              {highlight}
-                            </span>
-                          </div>
+                          <ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                          <span className="text-sm">{highlight}</span>
                         </motion.div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
 
-                  {/* Enhanced Tech Stack */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="space-y-4"
-                  >
-                    <h3 className="text-xl font-bold">Technology Stack</h3>
+                  {/* Technology Stack */}
+                  <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">Technology Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {project.technologies.map((tech, index) => (
                         <motion.div
                           key={index}
-                          initial={{ opacity: 0, scale: 0, rotate: -180 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
                           transition={{
-                            delay: 0.6 + index * 0.05,
+                            delay: 0.5 + index * 0.03,
                             type: "spring",
-                            stiffness: 200,
                           }}
-                          whileHover={{ scale: 1.1, y: -3 }}
+                          whileHover={{ scale: 1.05 }}
                         >
-                          <Badge 
-                            className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-primary/10 via-background to-accent/10 hover:from-primary/20 hover:to-accent/20 border-primary/20 transition-all cursor-default text-foreground"
-                          >
+                          <Badge variant="secondary" className="text-xs">
                             {tech}
                           </Badge>
                         </motion.div>
                       ))}
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </motion.div>
             </div>
@@ -369,13 +382,12 @@ function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   );
 }
 
+// Rest of the ProjectsSection component remains the same...
 export function ProjectsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { playClickSound, playHoverSound } = useSoundEffect();
-  const [selectedProject, setSelectedProject] = useState<
-    (typeof PROJECTS)[0] | null
-  >(null);
+  const [selectedProject, setSelectedProject] = useState<(typeof PROJECTS)[0] | null>(null);
 
   return (
     <section id="projects" className="py-12 relative" ref={ref}>
@@ -394,9 +406,14 @@ export function ProjectsSection() {
         >
           <Badge className="mb-4 px-5 py-2 text-sm font-medium border-border/50 bg-background/50 backdrop-blur text-foreground" variant="outline">
             <Folder className="w-3 h-3 mr-1 text-foreground" />
-            Project
+            Projects
           </Badge>
-
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            What I&apos;ve <span className="text-gradient">Built</span>
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Real-world applications that solve real problems
+          </p>
         </motion.div>
 
         {/* Projects Grid */}
@@ -423,7 +440,7 @@ export function ProjectsSection() {
                       src={project.image}
                       alt={project.title}
                       fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      className="object-contain group-hover:scale-110 transition-transform duration-500"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
@@ -478,7 +495,6 @@ export function ProjectsSection() {
 
                   {/* Links */}
                   <div className="flex items-center gap-4 text-sm">
-                    {/* Only show GitHub link if not private */}
                     {project.github && !project.isprivate && (
                       <button
                         onClick={(e) => {
@@ -493,7 +509,6 @@ export function ProjectsSection() {
                       </button>
                     )}
                     
-                    {/* Show private indicator */}
                     {project.isprivate && (
                       <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 text-xs">
                         <Code2 className="w-3 h-3" />
@@ -516,7 +531,7 @@ export function ProjectsSection() {
                     )}
                     <button className="ml-auto flex items-center gap-1 text-primary">
                       <span className="text-sm font-medium">
-                        View Case Study
+                        Learn More
                       </span>
                       <ChevronRight className="w-4 h-4" />
                     </button>
@@ -526,8 +541,6 @@ export function ProjectsSection() {
             </motion.div>
           ))}
         </div>
-
-
       </div>
 
       {/* Project Modal */}

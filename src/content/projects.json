@@ -48,12 +48,19 @@
         "Nginx"
       ],
       "github": "https://github.com/akashshetty1997/Supatrack",
-      "live": "https://supatrack.app/",
-      "image": "/images/Supatrack.png",
+      "live": "https://apps.apple.com/us/app/supatrack-social-nutrition/id6749211003?platform=iphone",
+      "image": "/images/supatrack.png",
       "screenshots": [
-        "/images/Supatrack-1.png",
-        "/images/Supatrack-2.png",
-        "/images/Supatrack-3.png"
+        "/images/Screen 1.png",
+        "/images/Screen 2.png",
+        "/images/Screen 3.png",
+        "/images/Screen 4.png",
+        "/images/Screen 5.png",
+        "/images/Screen 6.png",
+        "/images/Screen 7.png",
+        "/images/Screen 8.png",
+        "/images/Screen 9.png",
+        "/images/Screen 10.png"
       ],
       "isprivate": true
     },

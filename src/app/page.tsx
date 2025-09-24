@@ -10,7 +10,7 @@ import { ProjectsSection } from "@/components/sections/projects-section";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { ContactSection } from "@/components/sections/contact-section";
 // import { VideoSection } from "@/components/sections/video-section";
-import { GitHubSection } from "@/components/sections/github-section";
+// import { GitHubSection } from "@/components/sections/github-section";
 // import { TestimonialsSection } from "@/components/sections/testimonials-section";
 import { Navigation } from "@/components/layout/navigation";
 // import { Footer } from "@/components/layout/footer";
@@ -85,7 +85,7 @@ export default function HomePage() {
               <SkillsSection />
               
               {/* GitHub Activity */}
-              <GitHubSection />
+              {/* <GitHubSection /> */}
               
               {/* Testimonials */}
               {/* <TestimonialsSection /> */}

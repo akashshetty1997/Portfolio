@@ -3,8 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAVIGATION_ITEMS, PERSONAL_INFO } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -14,7 +13,6 @@ export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const { theme, setTheme } = useTheme();
   const { playClickSound, playHoverSound } = useSoundEffect();
 
   useEffect(() => {
@@ -50,11 +48,6 @@ export function Navigation() {
     setIsMobileMenuOpen(false);
     const element = document.querySelector(href);
     element?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const toggleTheme = () => {
-    playClickSound();
-    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -116,34 +109,10 @@ export function Navigation() {
                 )}
               </motion.a>
             ))}
-
-            {/* Theme Toggle */}
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={toggleTheme}
-              onMouseEnter={playHoverSound}
-              className="relative"
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center gap-4">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={toggleTheme}
-              onMouseEnter={playHoverSound}
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
-            </Button>
-
+          <div className="md:hidden">
             <Button
               size="icon"
               variant="ghost"

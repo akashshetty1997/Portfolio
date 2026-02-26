@@ -1,178 +1,135 @@
-// src/components/effects/loading-screen.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const greetings = [
-	{ text: "Hello", language: "English", flag: "🇺🇸" },
-	{ text: "नमस्ते", language: "Hindi", flag: "🇮🇳" },
-	{ text: "Bonjour", language: "French", flag: "🇫🇷" },
-	{ text: "Hola", language: "Spanish", flag: "🇪🇸" },
-	{ text: "こんにちは", language: "Japanese", flag: "🇯🇵" },
-	{ text: "你好", language: "Chinese", flag: "🇨🇳" },
-	{ text: "Ciao", language: "Italian", flag: "🇮🇹" },
-	{ text: "안녕하세요", language: "Korean", flag: "🇰🇷" },
-	{ text: "Привет", language: "Russian", flag: "🇷🇺" },
-	{ text: "مرحبا", language: "Arabic", flag: "🇸🇦" },
-	{ text: "Olá", language: "Portuguese", flag: "🇵🇹" },
-	{ text: "Hallo", language: "German", flag: "🇩🇪" },
-	{ text: "Sawubona", language: "Zulu", flag: "🇿🇦" },
-	{ text: "שלום", language: "Hebrew", flag: "🇮🇱" },
-	{ text: "Γεια σου", language: "Greek", flag: "🇬🇷" },
+    { text: "HELLO", language: "ENG" },
+    { text: "नमस्ते", language: "HIN" },
+    { text: "BONJOUR", language: "FRA" },
+    { text: "HOLA", language: "SPA" },
+    { text: "こんにちは", language: "JPN" },
+    { text: "你好", language: "CHN" },
+    { text: "CIAO", language: "ITA" },
+    { text: "안녕하세요", language: "KOR" },
+    { text: "ПРИВЕТ", language: "RUS" },
+    { text: "مرحبا", language: "ARA" },
+    { text: "OLÁ", language: "POR" },
+    { text: "HALLO", language: "GER" },
 ];
 
 interface LoadingScreenProps {
-	onLoadingComplete?: () => void;
-	duration?: number;
+    onLoadingComplete?: () => void;
+    duration?: number;
 }
 
 export function LoadingScreen({
-	onLoadingComplete,
-	duration = 4000,
+    onLoadingComplete,
+    duration = 3500,
 }: LoadingScreenProps) {
-	const [currentIndex, setCurrentIndex] = useState(0);
-	const [isVisible, setIsVisible] = useState(true);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [progress, setProgress] = useState(0);
+    const [isVisible, setIsVisible] = useState(true);
 
-	useEffect(() => {
-		// Change greeting every 250ms
-		const greetingInterval = setInterval(() => {
-			setCurrentIndex((prev) => (prev + 1) % greetings.length);
-		}, 500);
+    useEffect(() => {
+        // Hard-cut greeting interval
+        const greetingInterval = setInterval(() => {
+            setCurrentIndex((prev) => (prev + 1) % greetings.length);
+        }, duration / greetings.length); // Distribute greetings evenly across duration
 
-		// Hide loading screen after duration
-		const timer = setTimeout(() => {
-			setIsVisible(false);
-			clearInterval(greetingInterval);
+        // Progress counter interval
+        const updateRate = 30; // ms per tick
+        const totalTicks = duration / updateRate;
+        let currentTick = 0;
 
-			// Call callback after exit animation
-			setTimeout(() => {
-				onLoadingComplete?.();
-			}, 500);
-		}, duration);
+        const progressInterval = setInterval(() => {
+            currentTick++;
+            const newProgress = Math.min(Math.floor((currentTick / totalTicks) * 100), 100);
+            setProgress(newProgress);
+        }, updateRate);
 
-		return () => {
-			clearTimeout(timer);
-			clearInterval(greetingInterval);
-		};
-	}, [duration, onLoadingComplete]);
-	return (
-		<AnimatePresence>
-			{isVisible && (
-				<motion.div
-					initial={{ opacity: 1 }}
-					exit={{ opacity: 0 }}
-					transition={{ duration: 0.5 }}
-					className="fixed inset-0 z-[100] flex items-center justify-center bg-background overflow-hidden"
-				>
-					{/* Animated Background */}
-					<div className="absolute inset-0">
-						{/* Gradient mesh - monochrome */}
-						<div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-background to-foreground/3" />
+        // Hide loading screen after duration
+        const timer = setTimeout(() => {
+            setIsVisible(false);
+            clearInterval(greetingInterval);
+            clearInterval(progressInterval);
 
-						{/* Animated orbs - monochrome */}
-						<motion.div
-							className="absolute top-1/4 left-1/4 w-96 h-96 bg-foreground/5 rounded-full blur-3xl"
-							animate={{
-								x: [0, 100, 0],
-								y: [0, -50, 0],
-							}}
-							transition={{
-								duration: 8,
-								repeat: Infinity,
-								ease: "easeInOut",
-							}}
-						/>
-						<motion.div
-							className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-foreground/3 rounded-full blur-3xl"
-							animate={{
-								x: [0, -100, 0],
-								y: [0, 50, 0],
-							}}
-							transition={{
-								duration: 10,
-								repeat: Infinity,
-								ease: "easeInOut",
-							}}
-						/>
+            // Call callback after the heavy exit animation finishes
+            setTimeout(() => {
+                onLoadingComplete?.();
+            }, 800); 
+        }, duration);
 
-						{/* Grid pattern */}
-						<div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:50px_50px]" />
-					</div>
+        return () => {
+            clearTimeout(timer);
+            clearInterval(greetingInterval);
+            clearInterval(progressInterval);
+        };
+    }, [duration, onLoadingComplete]);
 
-					{/* Main Content */}
-					<div className="relative z-10 flex flex-col items-center justify-center">
-						{/* Greeting Display */}
-						<div className="relative h-32 flex items-center justify-center mb-8">
-							<AnimatePresence mode="wait">
-								<motion.div
-									key={currentIndex}
-									initial={{ opacity: 0, y: 20, scale: 0.8 }}
-									animate={{ opacity: 1, y: 0, scale: 1 }}
-									exit={{ opacity: 0, y: -20, scale: 0.8 }}
-									transition={{ duration: 0.2 }}
-									className="text-center"
-								>
-									{/* Greeting Text */}
-									<h1 className="text-6xl md:text-8xl font-bold text-foreground">
-										{greetings[currentIndex].text}
-									</h1>
-								</motion.div>
-							</AnimatePresence>
-						</div>
-					</div>
+    return (
+        <AnimatePresence>
+            {isVisible && (
+                <motion.div
+                    // The brutalist "curtain pull" exit animation
+                    initial={{ y: 0 }}
+                    exit={{ y: "-100vh" }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] as const }}
+                    className="fixed inset-0 z-[100] flex flex-col justify-between bg-foreground text-background overflow-hidden selection:bg-background selection:text-foreground"
+                >
+                    {/* Top Row: System Logs */}
+                    <div className="flex justify-between items-start p-6 md:p-10 font-mono text-xs md:text-sm uppercase tracking-widest opacity-80">
+                        <div className="flex flex-col gap-1">
+                            <span>System_Boot_Sequence //</span>
+                            <span>Initializing_Modules... {progress}%</span>
+                            <span className="animate-pulse">Loading_Assets_ [OK]</span>
+                        </div>
+                        <div className="text-right">
+                            <span>v2.0.26</span>
+                            <br />
+                            <span>Loc: BOS_MA</span>
+                        </div>
+                    </div>
 
-					{/* Decorative Elements - monochrome borders */}
-					<div className="absolute bottom-10 left-10">
-						<motion.div
-							animate={{
-								rotate: 360,
-							}}
-							transition={{
-								duration: 20,
-								repeat: Infinity,
-								ease: "linear",
-							}}
-							className="w-20 h-20 border-2 border-border rounded-full"
-						/>
-					</div>
+                    {/* Middle: Massive Greeting */}
+                    <div className="flex-1 flex items-center justify-center px-4 relative">
+                        {/* Decorative wireframe crosshairs */}
+                        <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-10">
+                            <div className="w-full h-px bg-background" />
+                            <div className="absolute w-px h-full bg-background" />
+                        </div>
 
-					<div className="absolute top-10 right-10">
-						<motion.div
-							animate={{
-								rotate: -360,
-							}}
-							transition={{
-								duration: 15,
-								repeat: Infinity,
-								ease: "linear",
-							}}
-							className="w-16 h-16 border-2 border-border rounded-lg"
-						/>
-					</div>
+                        <div className="relative text-center w-full flex flex-col items-center justify-center h-40">
+                            <span className="font-mono text-[10px] md:text-xs tracking-[0.3em] uppercase opacity-50 absolute top-0">
+                                LANG_ID: {greetings[currentIndex].language}
+                            </span>
+                            
+                            <h1 className="text-[clamp(4rem,15vw,12rem)] font-black uppercase tracking-tighter leading-none m-0 p-0 absolute top-1/2 -translate-y-1/2">
+                                {greetings[currentIndex].text}
+                            </h1>
+                        </div>
+                    </div>
 
-					{/* Floating dots - monochrome */}
-					{[...Array(5)].map((_, i) => (
-						<motion.div
-							key={i}
-							className="absolute w-1 h-1 bg-foreground/30 rounded-full"
-							style={{
-								left: `${20 + i * 15}%`,
-								top: `${30 + i * 10}%`,
-							}}
-							animate={{
-								y: [0, -20, 0],
-								opacity: [0.3, 1, 0.3],
-							}}
-							transition={{
-								duration: 2 + i * 0.5,
-								repeat: Infinity,
-								delay: i * 0.2,
-							}}
-						/>
-					))}
-				</motion.div>
-			)}
-		</AnimatePresence>
-	);
+                    {/* Bottom Row: Progress & Name */}
+                    <div className="p-6 md:p-10 flex flex-col md:flex-row justify-between items-end gap-6 border-t border-background/20 relative">
+                        {/* Stark Loading Bar filling the exact border width */}
+                        <div 
+                            className="absolute top-0 left-0 h-[2px] bg-background transition-all ease-linear duration-75"
+                            style={{ width: `${progress}%` }}
+                        />
+
+                        <div className="font-mono text-xs tracking-[0.3em] uppercase">
+                            Akash Shetty <br className="hidden md:block" />
+                            <span className="opacity-50">Software Engineer</span>
+                        </div>
+                        
+                        {/* Massive Progress Number */}
+                        <div className="text-6xl md:text-8xl font-black tracking-tighter tabular-nums leading-none">
+                            {progress.toString().padStart(3, '0')}
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 }

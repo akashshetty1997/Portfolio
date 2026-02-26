@@ -1,4 +1,3 @@
-// src/components/effects/custom-cursor.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -23,7 +22,8 @@ export function CustomCursor() {
     if (!hasPointer) return;
 
     const updateCursor = () => {
-      const speed = 0.15;
+      // Slightly faster tracking for a more mechanical feel
+      const speed = 0.25; 
       currentPos.current.x +=
         (mousePos.current.x - currentPos.current.x) * speed;
       currentPos.current.y +=
@@ -107,7 +107,7 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Dot - uses foreground color, no mix-blend-difference */}
+      {/* Central Target - Sharp Square */}
       <div
         ref={cursorDotRef}
         className="pointer-events-none fixed left-0 top-0 z-[10001]"
@@ -116,24 +116,21 @@ export function CustomCursor() {
         <AnimatePresence>
           <motion.div
             className="relative -translate-x-1/2 -translate-y-1/2"
-            animate={{ scale: isClicked ? 0.8 : isHovered ? 0.5 : 1 }}
+            animate={{ scale: isClicked ? 0.5 : isHovered ? 1.5 : 1 }}
             transition={{
-              type: "spring",
-              damping: 20,
-              stiffness: 400,
-              mass: 0.5,
+              type: "tween", // Replaced bouncy spring with rigid tween
+              duration: 0.15,
+              ease: "circOut"
             }}
           >
             <div
-              className={`w-2 h-2 rounded-full transition-all duration-200 bg-foreground ${
-                isHovered ? "scale-150" : ""
-              }`}
+              className={`w-2 h-2 rounded-none transition-all duration-200 bg-foreground`}
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Ring - monochrome border, no colored gradient */}
+      {/* Outer Reticle - Wireframe Square */}
       <div
         ref={cursorRingRef}
         className="pointer-events-none fixed left-0 top-0 z-[10000]"
@@ -143,27 +140,22 @@ export function CustomCursor() {
           <motion.div
             className="relative -translate-x-1/2 -translate-y-1/2"
             animate={{
-              scale: isClicked ? 1.5 : isHovered ? 2 : 1,
-              opacity: isHovered ? 0.5 : 0.8,
+              scale: isClicked ? 0.9 : isHovered ? 1.4 : 1,
+              rotate: isClicked ? 45 : isHovered ? 90 : 0, // Mechanical rotation on interaction
+              opacity: isHovered ? 1 : 0.4,
             }}
             transition={{
-              type: "spring",
-              damping: 25,
-              stiffness: 350,
-              mass: 0.5,
+              type: "tween",
+              duration: 0.2,
+              ease: "easeOut"
             }}
           >
             <div
-              className={`w-10 h-10 rounded-full transition-all duration-300 ${
+              className={`w-8 h-8 rounded-none transition-all duration-300 ${
                 isHovered
-                  ? "border-2 border-foreground"
-                  : "border border-foreground/30"
+                  ? "border-[2px] border-foreground bg-foreground/5"
+                  : "border border-foreground/50"
               }`}
-              style={{
-                background: isHovered
-                  ? "radial-gradient(circle, transparent 40%, hsl(var(--foreground) / 0.05) 100%)"
-                  : "transparent",
-              }}
             />
           </motion.div>
         </AnimatePresence>

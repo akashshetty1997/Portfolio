@@ -1,23 +1,41 @@
-// src/components/sections/about-section.tsx
 "use client";
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import {
-  GraduationCap,
   MapPin,
   Calendar,
-  Sparkles,
   Award,
   Briefcase,
   Code2,
   Rocket,
+  ArrowRight,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EDUCATION, PERSONAL_INFO } from "@/lib/constants";
 import { useSoundEffect } from "@/hooks/use-sound";
 import Image from "next/image";
+
+// Strict, snappy animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { 
+      duration: 0.7, 
+      ease: [0.16, 1, 0.3, 1] as const
+    },
+  },
+};
 
 export function AboutSection() {
   const ref = useRef(null);
@@ -25,221 +43,229 @@ export function AboutSection() {
   const { playHoverSound } = useSoundEffect();
 
   const highlights = [
-    { icon: Briefcase, label: "4+ Years", sublabel: "Production Experience" },
-    { icon: Code2, label: "10+", sublabel: "Technologies" },
-    { icon: Rocket, label: "4.9+", sublabel: "App Store Rating" },
-    { icon: Award, label: "3.4", sublabel: "GPA at Northeastern" },
+    { icon: Briefcase, label: "4+ YRS", sublabel: "PRODUCTION EXP" },
+    { icon: Code2, label: "10+", sublabel: "TECHNOLOGIES" },
+    { icon: Rocket, label: "4.9+", sublabel: "APP STORE RATING" },
+    { icon: Award, label: "3.4", sublabel: "GPA @ NORTHEASTERN" },
   ];
 
   return (
-    <section id="about" className="py-20 relative overflow-hidden" ref={ref}>
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+    <section
+      id="about"
+      ref={ref}
+      className="relative min-h-screen bg-background pt-24 pb-32 overflow-hidden border-t border-border"
+    >
+      {/* Massive Background Typography Watermark */}
+      <div className="absolute top-10 left-0 w-full overflow-hidden pointer-events-none opacity-[0.03] select-none flex justify-center">
+        <h2 className="text-[clamp(10rem,25vw,30rem)] font-black leading-none whitespace-nowrap">
+          ABOUT
+        </h2>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <Badge className="mb-4 px-4 py-1.5" variant="outline">
-            <Sparkles className="w-3 h-3 mr-2" />
-            About Me
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Who I <span className="text-gradient">Am</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            MS CS student at Northeastern with 4+ years of production experience
-            building scalable full-stack systems
-          </p>
-        </motion.div>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase mb-4 block">
+              01 // The Architect
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+              Who I{" "}
+              <span
+                className="text-transparent"
+                style={{ WebkitTextStroke: "1.5px hsl(var(--foreground))" }}
+              >
+                Am
+              </span>
+            </h2>
+          </motion.div>
 
-        {/* Summary Card - full width, top position */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-sm font-mono text-muted-foreground uppercase flex flex-col items-start md:items-end"
+          >
+            <span>Based in {PERSONAL_INFO.location}</span>
+            <span>MS CS @ Northeastern</span>
+          </motion.div>
+        </div>
+
+        {/* Main Content Grid */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="max-w-6xl mx-auto mb-8"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start"
         >
-          <Card className="bg-card border-border hover:border-foreground/20 transition-colors duration-200">
-            <CardContent className="p-6 md:p-8">
-              <div className="flex flex-col md:flex-row gap-6 items-start">
-                {/* Avatar */}
-                <motion.div
-                  className="shrink-0 mx-auto md:mx-0"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+          {/* Left Column: Image (Magazine Spread Style) */}
+          <motion.div
+            variants={itemVariants}
+            className="lg:col-span-5 relative group h-fit"
+          >
+            <div className="relative w-full overflow-hidden border border-border bg-muted">
+              {/* Sharp, stark image container with hover effect using explicit width/height */}
+              <Image
+                src="/images/Profile.png"
+                alt={PERSONAL_INFO.name}
+                width={800}
+                height={1000}
+                className="w-full h-auto object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
+                priority
+                unoptimized
+              />
+              {/* Overlay Border - pointer-events-none ensures hover works perfectly */}
+              <div className="absolute inset-0 border-[12px] border-background mix-blend-overlay opacity-50 pointer-events-none" />
+            </div>
+
+            {/* Brutalist Name Block overlapping the image */}
+            <div className="absolute -bottom-6 -right-6 lg:-right-12 bg-foreground text-background p-6 shadow-2xl z-20">
+              <h3 className="text-2xl font-black uppercase tracking-tight m-0 leading-none">
+                {PERSONAL_INFO.name}
+              </h3>
+              <p className="font-mono text-xs mt-2 text-background/80 tracking-widest uppercase">
+                Software Engineer
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Text & Stats */}
+          <div className="lg:col-span-7 flex flex-col justify-between h-full pt-8 lg:pt-0">
+            {/* Summary Text */}
+            <motion.div variants={itemVariants} className="space-y-6 mb-16">
+              {PERSONAL_INFO.aboutMe.summary.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className={`text-base md:text-lg leading-relaxed ${
+                    index === 0
+                      ? "text-foreground font-medium text-xl md:text-2xl tracking-tight"
+                      : "text-muted-foreground"
+                  }`}
                 >
-                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl border-2 border-border overflow-hidden">
-                    <Image
-                      src="/images/Profile.png"
-                      alt={PERSONAL_INFO.name}
-                      width={112}
-                      height={112}
-                      className="w-full h-full object-cover"
-                      priority
-                    />
-                  </div>
-                </motion.div>
-
-                {/* Name + Summary */}
-                <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-xl font-bold mb-1">
-                    {PERSONAL_INFO.name}
-                  </h3>
-                  <div className="flex items-center justify-center md:justify-start gap-3 text-sm text-muted-foreground mb-4">
-                    <span>Software Engineer</span>
-                    <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                    <span>MS CS Student</span>
-                    <span className="w-1 h-1 rounded-full bg-muted-foreground/50" />
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3 h-3" />
-                      {PERSONAL_INFO.location}
-                    </span>
-                  </div>
-
-                  <div className="space-y-3">
-                    {PERSONAL_INFO.aboutMe.summary
-                      .slice(0, 2)
-                      .map((paragraph, index) => (
-                        <p
-                          key={index}
-                          className="text-sm text-muted-foreground leading-relaxed"
-                        >
-                          {paragraph}
-                        </p>
-                      ))}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Highlights Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto mb-8"
-        >
-          {highlights.map((item, index) => (
-            <motion.div
-              key={index}
-              className="text-center p-4 rounded-xl bg-card border border-border hover:border-foreground/30 transition-colors duration-200"
-              whileHover={{ y: -4 }}
-              onHoverStart={playHoverSound}
-            >
-              <item.icon className="w-5 h-5 mx-auto mb-2 text-foreground" />
-              <p className="text-xl font-bold">{item.label}</p>
-              <p className="text-xs text-muted-foreground">{item.sublabel}</p>
+                  {paragraph}
+                </p>
+              ))}
             </motion.div>
-          ))}
+
+            {/* Brutalist Stats Row */}
+            <motion.div
+              variants={itemVariants}
+              className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-border"
+            >
+              {highlights.map((item, index) => (
+                <div
+                  key={index}
+                  className="p-4 md:p-6 border-r border-b border-border hover:bg-foreground hover:text-background transition-colors duration-300 group flex flex-col justify-between aspect-square"
+                  onMouseEnter={playHoverSound}
+                >
+                  <item.icon className="w-5 h-5 mb-4 opacity-50 group-hover:opacity-100 group-hover:-translate-y-1 transition-all" />
+                  <div>
+                    <p className="text-2xl md:text-3xl font-black tracking-tighter mb-1">
+                      {item.label}
+                    </p>
+                    <p className="text-[10px] md:text-xs font-mono tracking-widest opacity-70">
+                      {item.sublabel}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
         </motion.div>
 
-        {/* Education */}
+        {/* Education Timeline (Editorial Table format) */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="max-w-6xl mx-auto"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="mt-32"
         >
-          <Card className="bg-card border-border hover:border-foreground/20 transition-colors duration-200">
-            <CardContent className="p-6">
-              {/* Header */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-secondary">
-                  <GraduationCap className="w-5 h-5 text-foreground" />
+          <motion.h3
+            variants={itemVariants}
+            className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-8 flex items-center gap-4"
+          >
+            Education Background
+            <div className="h-px bg-border flex-1" />
+          </motion.h3>
+
+          <div className="border-t border-border">
+            {EDUCATION.map((edu, index) => (
+              <motion.div
+                key={index}
+                variants={itemVariants}
+                className="group border-b border-border py-8 hover:px-6 transition-all duration-300 hover:bg-secondary/20 flex flex-col md:flex-row md:items-center justify-between gap-6"
+                onMouseEnter={playHoverSound}
+              >
+                {/* Left: Year & Location */}
+                <div className="w-full md:w-1/4 flex flex-row md:flex-col justify-between md:justify-start font-mono text-sm">
+                  <span className="text-foreground font-semibold flex items-center gap-2">
+                    <Calendar className="w-4 h-4 opacity-50" />
+                    {edu.duration}
+                  </span>
+                  <span className="text-muted-foreground flex items-center gap-2 md:mt-2">
+                    <MapPin className="w-3.5 h-3.5 opacity-50" />
+                    {edu.location}
+                  </span>
                 </div>
-                <h3 className="text-lg font-bold">Education</h3>
-              </div>
 
-              {/* Education Grid */}
-              <div className="grid md:grid-cols-2 gap-4">
-                {EDUCATION.map((edu, index) => (
-                  <motion.div
-                    key={index}
-                    className="p-4 rounded-lg bg-card border border-border hover:border-foreground/20 transition-colors duration-200"
-                    whileHover={{ y: -2 }}
-                    onHoverStart={playHoverSound}
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <h4 className="font-semibold">{edu.school}</h4>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {edu.degree}
-                          </p>
-                        </div>
+                {/* Middle: Degree & School */}
+                <div className="w-full md:w-1/2">
+                  <h4 className="text-xl md:text-2xl font-black uppercase tracking-tight mb-2 group-hover:text-primary transition-colors">
+                    {edu.school}
+                  </h4>
+                  <p className="text-foreground/80 text-sm md:text-base">
+                    {edu.degree}
+                  </p>
+
+                  {/* Coursework Tags - Stark Badges */}
+                  {edu.coursework && edu.coursework.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {edu.coursework.map((course, idx) => (
                         <Badge
-                          variant={
-                            edu.duration.includes("2027")
-                              ? "default"
-                              : "outline"
-                          }
-                          className="text-xs"
+                          key={idx}
+                          variant="outline"
+                          className="rounded-none border-border/50 text-[10px] tracking-widest uppercase font-mono bg-transparent"
                         >
-                          {edu.duration.includes("2027")
-                            ? "Current"
-                            : "Completed"}
+                          {course}
                         </Badge>
-                      </div>
-
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3" />
-                          <span>{edu.location}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          <span>{edu.duration}</span>
-                        </div>
-                      </div>
-
-                      {/* GPA */}
-                      {edu.gpa && (
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary border border-border">
-                          <div className="flex items-center gap-2">
-                            <Award className="w-4 h-4 text-foreground" />
-                            <span className="text-sm font-medium">
-                              {index === 0 ? "Current GPA" : "Final GPA"}
-                            </span>
-                          </div>
-                          <div className="text-right">
-                            <span className="text-lg font-bold text-foreground">
-                              {edu.gpa.split("/")[0]}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              /{edu.gpa.split("/")[1]}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Coursework */}
-                      {edu.coursework && edu.coursework.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/30">
-                          {edu.coursework.map((course, idx) => (
-                            <Badge
-                              key={idx}
-                              variant="secondary"
-                              className="text-xs px-2 py-0.5"
-                            >
-                              {course}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      ))}
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  )}
+                </div>
+
+                {/* Right: GPA & Status */}
+                <div className="w-full md:w-1/4 flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2">
+                  {edu.gpa && (
+                    <div className="text-right flex items-baseline gap-1">
+                      <span className="text-3xl font-black tracking-tighter">
+                        {edu.gpa.split("/")[0]}
+                      </span>
+                      <span className="text-sm font-mono text-muted-foreground">
+                        /{edu.gpa.split("/")[1]}
+                      </span>
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2 text-xs font-mono tracking-widest uppercase text-muted-foreground">
+                    {edu.duration.includes("2027") ? (
+                      <>
+                        <span className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                        In Progress
+                      </>
+                    ) : (
+                      <>
+                        <ArrowRight className="w-4 h-4" />
+                        Completed
+                      </>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

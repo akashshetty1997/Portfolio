@@ -1,10 +1,8 @@
-// src/components/sections/contact-section.tsx
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
-  Mail,
   MapPin,
   Github,
   Linkedin,
@@ -15,23 +13,37 @@ import {
   Eye,
   X,
   FileText,
-  CheckCircle,
-  Sparkles,
-  Send,
+  Check,
+  Terminal,
   ArrowRight,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PERSONAL_INFO } from "@/lib/constants";
 import { useSoundEffect } from "@/hooks/use-sound";
 import { toast } from "sonner";
-import { AnimatePresence } from "framer-motion";
 
+// Strict animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 0.7, 
+      ease: [0.16, 1, 0.3, 1] as const
+    } 
+  },
+};
+
+// Brutalist Resume Modal
 interface ResumeModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -39,6 +51,7 @@ interface ResumeModalProps {
 
 function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const { playClickSound, playHoverSound, playSuccessSound } = useSoundEffect();
+  const [pdfError, setPdfError] = useState(false);
 
   const handleDownload = () => {
     playClickSound();
@@ -48,87 +61,97 @@ function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("Resume download started!");
+    toast.success("Resume sequence initiated.");
     playSuccessSound();
+  };
+
+  const handleOpenExternal = () => {
+    playClickSound();
+    window.open(PERSONAL_INFO.resume, '_blank');
   };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-[95vw] md:max-w-4xl max-h-[90vh] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50">
-            {/* Close Button */}
-            <motion.button
-              onClick={() => {
-                playClickSound();
-                onClose();
-              }}
-              className="absolute top-3 right-3 z-50 p-2 rounded-full bg-background/80 backdrop-blur border border-border/50 hover:bg-background/90 transition-all group"
-              whileHover={{ scale: 1.05, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <X className="w-4 h-4 text-foreground/80 group-hover:text-foreground transition-colors" />
-            </motion.button>
+          <DialogContent className="max-w-[98vw] w-full md:max-w-[90vw] lg:max-w-7xl max-h-[98vh] h-[98vh] p-0 overflow-hidden bg-background border-2 border-border shadow-2xl rounded-none flex flex-col">
+            <DialogTitle className="sr-only">Resume Document</DialogTitle>
 
-            {/* Content Container */}
-            <div className="relative flex flex-col h-full">
-              {/* Header */}
-              <div className="p-4 md:p-6 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
-                    <FileText className="w-5 h-5 text-foreground" />
-                  </div>
-                  <h2 className="text-xl md:text-2xl font-bold">
-                    Resume Preview
-                  </h2>
-                </div>
-              </div>
+            {/* Brutalist Header Bar */}
+            <div className="flex justify-between items-center border-b border-border px-4 py-3 bg-foreground text-background shrink-0">
+              <span className="font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-background animate-pulse" />
+                Doc_Viewer: Resume.pdf
+              </span>
+              <button
+                onClick={() => { playClickSound(); onClose(); }}
+                className="hover:rotate-90 transition-transform duration-300 p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-              {/* Resume Preview */}
-              <div className="flex-1 p-3 md:p-4 overflow-hidden bg-muted/20">
-                <div className="w-full h-full rounded-lg overflow-hidden" style={{ minHeight: '50vh' }}>
-                  <iframe
-                    src={`${PERSONAL_INFO.resume}#toolbar=0&navpanes=0&scrollbar=0`}
-                    className="w-full h-full border-0 rounded-lg bg-white"
-                    title="Resume Preview"
-                    loading="lazy"
+            {/* Document Container */}
+            <div className="flex-1 bg-muted/20 relative w-full min-h-0">
+              {!pdfError ? (
+                <div className="absolute inset-0 p-2 md:p-4">
+                  <embed
+                    src={`${PERSONAL_INFO.resume}#toolbar=0`}
+                    type="application/pdf"
+                    className="w-full h-full border border-border bg-white shadow-2xl"
+                    onError={() => setPdfError(true)}
                   />
                 </div>
-              </div>
-
-              {/* Footer Actions */}
-              <div className="p-4 md:p-6 border-t border-border/50 bg-background/50">
-                <div className="flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
-                  <p className="text-xs text-muted-foreground hidden sm:block">
-                    Last updated: December 2024
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        playClickSound();
-                        window.open(PERSONAL_INFO.resume, '_blank');
-                      }}
-                      onMouseEnter={playHoverSound}
-                      className="w-full sm:w-auto"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Open in Tab
-                    </Button>
-                    
-                    <Button
-                      onClick={handleDownload}
-                      onMouseEnter={playHoverSound}
-                      className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download PDF
-                    </Button>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center p-8">
+                  <div className="text-center max-w-md">
+                    <FileText className="w-16 h-16 mx-auto mb-6 text-muted-foreground" />
+                    <h3 className="text-xl font-black uppercase mb-3">Preview Unavailable</h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      Your browser doesn't support inline PDF viewing. Use the buttons below to view or download the resume.
+                    </p>
+                    <div className="flex gap-3 justify-center">
+                      <button
+                        onClick={handleOpenExternal}
+                        onMouseEnter={playHoverSound}
+                        className="px-4 py-2 border border-border hover:bg-foreground hover:text-background transition-colors font-mono text-xs uppercase tracking-widest"
+                      >
+                        Open in New Tab
+                      </button>
+                      <button
+                        onClick={handleDownload}
+                        onMouseEnter={playHoverSound}
+                        className="px-4 py-2 bg-foreground text-background hover:bg-foreground/90 transition-colors font-mono text-xs uppercase tracking-widest"
+                      >
+                        Download PDF
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
+
+            {/* Brutalist Footer Actions */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 border-t border-border bg-background shrink-0">
+              <button
+                onClick={handleOpenExternal}
+                onMouseEnter={playHoverSound}
+                className="p-4 border-b sm:border-b-0 sm:border-r border-border hover:bg-foreground hover:text-background transition-colors flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-widest group"
+              >
+                <ExternalLink className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                Open External
+              </button>
+              
+              <button
+                onClick={handleDownload}
+                onMouseEnter={playHoverSound}
+                className="p-4 bg-foreground text-background hover:bg-transparent hover:text-foreground border border-transparent hover:border-foreground transition-colors flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-widest group"
+              >
+                <Download className="w-4 h-4 group-hover:-translate-y-1 transition-transform" />
+                Execute Download
+              </button>
+            </div>
+
           </DialogContent>
         </Dialog>
       )}
@@ -156,285 +179,149 @@ export function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-12 md:py-20 relative overflow-hidden" ref={ref}>
-      {/* Background Effects - monochrome */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-foreground/3 to-transparent" />
-        
-        {/* Animated orbs - monochrome */}
-        <motion.div
-          className="absolute top-1/4 -left-32 md:-left-48 w-64 md:w-96 h-64 md:h-96 bg-foreground/5 rounded-full blur-3xl"
-          animate={{
-            x: [0, 30, 0],
-            y: [0, -20, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 -right-32 md:-right-48 w-64 md:w-96 h-64 md:h-96 bg-foreground/3 rounded-full blur-3xl"
-          animate={{
-            x: [0, -30, 0],
-            y: [0, 20, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+    <section 
+      id="contact" 
+      className="relative min-h-[90vh] bg-background pt-24 pb-32 overflow-hidden border-t border-border flex flex-col" 
+      ref={ref}
+    >
+      {/* Massive Background Typography Watermark */}
+      <div className="absolute top-20 left-0 w-full overflow-hidden pointer-events-none opacity-[0.03] select-none flex justify-center">
+        <h2 className="text-[clamp(6rem,18vw,22rem)] font-black leading-none whitespace-nowrap">
+          CONTACT
+        </h2>
       </div>
 
-      <div className="container mx-auto px-4 md:px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10 flex-1 flex flex-col justify-center">
+        
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8 md:mb-12"
-        >
-          <Badge className="mb-4 px-3 md:px-4 py-1.5" variant="outline">
-            <Sparkles className="w-3 h-3 mr-2" />
-            Get in Touch
-          </Badge>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 md:mb-4 px-4">
-            Ready to <span className="text-gradient">Collaborate?</span>
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-lg md:max-w-2xl mx-auto px-4">
-            I&apos;m actively seeking opportunities to contribute to innovative projects
-          </p>
-        </motion.div>
-
-        {/* Main Content Grid */}
-        <div className="max-w-5xl mx-auto grid lg:grid-cols-5 gap-6 md:gap-8">
-          {/* Left Column - Contact Info */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="lg:col-span-2 space-y-4"
+            transition={{ duration: 0.6 }}
           >
-            {/* Status Card - monochrome with functional green dot */}
-            <Card className="bg-card border-border">
-              <CardContent className="p-4 md:p-6">
-                <div className="flex items-center gap-3">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
-                  </span>
-                  <div>
-                    <p className="font-semibold text-foreground">
-                      Available for Hire
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Full-time • Contract • Remote
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Location Card - monochrome icons */}
-            <Card className="bg-card border-border">
-              <CardContent className="p-4 md:p-6 space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
-                    <MapPin className="w-4 h-4 text-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">{PERSONAL_INFO.location}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Open to relocation
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
-                    <Clock className="w-4 h-4 text-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Response Time</p>
-                    <p className="text-xs text-muted-foreground">
-                      Within 24 hours
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-secondary">
-                    <Calendar className="w-4 h-4 text-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Available</p>
-                    <p className="text-xs text-muted-foreground">
-                      Immediately
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <span className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase mb-4 block">
+              05 // Handshake
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+              Initiate <span className="text-transparent" style={{ WebkitTextStroke: "1.5px hsl(var(--foreground))" }}>Contact</span>
+            </h2>
           </motion.div>
 
-          {/* Right Column - Contact Actions */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="lg:col-span-3 space-y-4"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-sm font-mono text-muted-foreground uppercase flex flex-col items-start md:items-end"
           >
-            {/* Primary Contact Card - monochrome */}
-            <Card className="bg-card border-border overflow-hidden">
-              <CardContent className="p-4 md:p-6 space-y-4 relative">
-                <div>
-                  <h3 className="font-bold mb-4 flex items-center gap-2">
-                    <Send className="w-4 h-4 text-foreground" />
-                    Primary Contact
-                  </h3>
-                  
-                  {/* Email Button - Fixed: Using motion.div instead of motion.button */}
-                  <motion.div
-                    onClick={() => handleCopy(PERSONAL_INFO.email, "Email")}
-                    onMouseEnter={playHoverSound}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full p-4 rounded-lg bg-secondary border border-border hover:border-foreground/20 transition-all duration-200 group cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <Mail className="w-5 h-5 text-foreground" />
-                        <div className="text-left">
-                          <p className="font-medium text-sm md:text-base">
-                            {PERSONAL_INFO.email}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            Click to copy • Primary email
-                          </p>
-                        </div>
-                      </div>
-                      {copiedItem === "Email" ? (
-                        <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                      ) : (
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
-                      )}
-                    </div>
-                  </motion.div>
-                </div>
-
-                {/* Quick Actions */}
-                <div className="grid grid-cols-2 gap-3">
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <a
-                      href={PERSONAL_INFO.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onMouseEnter={playHoverSound}
-                      onClick={playClickSound}
-                      className="block"
-                    >
-                      <Button variant="outline" className="w-full h-11 group relative overflow-hidden">
-                        <span className="absolute inset-0 bg-[#0077b5]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <Linkedin className="w-4 h-4 mr-2 group-hover:text-[#0077b5] transition-colors" />
-                        LinkedIn
-                      </Button>
-                    </a>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <a
-                      href={PERSONAL_INFO.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onMouseEnter={playHoverSound}
-                      onClick={playClickSound}
-                      className="block"
-                    >
-                      <Button variant="outline" className="w-full h-11 group relative overflow-hidden">
-                        <span className="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <Github className="w-4 h-4 mr-2" />
-                        GitHub
-                      </Button>
-                    </a>
-                  </motion.div>
-                </div>
-
-                {/* Resume Actions */}
-                <div className="pt-2">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1"
-                    >
-                      <Button 
-                        variant="secondary" 
-                        className="w-full h-11"
-                        onClick={() => {
-                          playClickSound();
-                          setIsResumeModalOpen(true);
-                        }}
-                        onMouseEnter={playHoverSound}
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        Preview Resume
-                      </Button>
-                    </motion.div>
-
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="flex-1"
-                    >
-                      <a
-                        href={PERSONAL_INFO.resume}
-                        download
-                        onClick={() => {
-                          playClickSound();
-                          toast.success("Resume download started!");
-                        }}
-                        onMouseEnter={playHoverSound}
-                        className="block"
-                      >
-                        <Button className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200">
-                          <Download className="w-4 h-4 mr-2" />
-                          Download PDF
-                        </Button>
-                      </a>
-                    </motion.div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* CTA Message */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.4 }}
-              className="text-center p-4 rounded-lg bg-muted/30"
-            >
-              <p className="text-sm text-muted-foreground">
-                💡 Feel free to reach out for collaborations or just a friendly chat about tech!
-              </p>
-            </motion.div>
+            <span>Network Open</span>
+            <span>Awaiting Transmission</span>
           </motion.div>
         </div>
 
-        {/* Resume Modal */}
-        <ResumeModal
-          isOpen={isResumeModalOpen}
-          onClose={() => setIsResumeModalOpen(false)}
-        />
+        {/* Brutalist Contact Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          className="border-t-[2px] border-foreground grid grid-cols-1 lg:grid-cols-12"
+        >
+          {/* Left Column: Terminal / Status */}
+          <motion.div variants={itemVariants} className="lg:col-span-5 border-b lg:border-b-0 lg:border-r border-border p-6 md:p-10 flex flex-col justify-between bg-muted/10 relative overflow-hidden group">
+             <div className="absolute top-0 left-0 w-full h-px bg-primary/20 -translate-y-full group-hover:animate-[scan_3s_ease-in-out_infinite]" />
+             
+             <div className="space-y-12">
+               <div className="flex items-center gap-4">
+                  <Terminal className="w-8 h-8 text-foreground" />
+                  <div>
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground block mb-1">System Status</span>
+                    <div className="flex items-center gap-2">
+                       <span className="w-2.5 h-2.5 bg-green-500 rounded-none animate-pulse" />
+                       <span className="font-black uppercase tracking-tight">Available for Hire</span>
+                    </div>
+                  </div>
+               </div>
+
+               <div className="space-y-6 border-l-2 border-border pl-6">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground flex items-center gap-2"><MapPin className="w-3 h-3"/> Location Coordinates</span>
+                    <span className="font-bold text-sm uppercase">{PERSONAL_INFO.location} <span className="text-muted-foreground font-normal ml-2 hidden sm:inline">/// Open to Relocation</span></span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground flex items-center gap-2"><Clock className="w-3 h-3"/> Ping Response</span>
+                    <span className="font-bold text-sm uppercase">&lt; 24 Hours</span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-muted-foreground flex items-center gap-2"><Calendar className="w-3 h-3"/> Deployment Date</span>
+                    <span className="font-bold text-sm uppercase">Immediate</span>
+                  </div>
+               </div>
+             </div>
+
+             <p className="font-mono text-[10px] tracking-widest text-muted-foreground uppercase mt-12 pt-6 border-t border-border/50">
+               // Ready to architect solutions. Transmit message to begin.
+             </p>
+          </motion.div>
+
+          {/* Right Column: Interactive Elements */}
+          <motion.div variants={itemVariants} className="lg:col-span-7 flex flex-col">
+            
+            {/* Massive Email Copy Block */}
+            <div 
+              onClick={() => handleCopy(PERSONAL_INFO.email, "Email")}
+              onMouseEnter={playHoverSound}
+              className="group p-6 sm:p-8 md:p-16 border-b border-border hover:bg-foreground hover:text-background transition-colors duration-500 cursor-pointer flex flex-col justify-center items-center text-center h-full relative min-h-[200px]"
+            >
+              <span className="font-mono text-[10px] tracking-[0.3em] uppercase mb-6 opacity-50 block w-full text-left absolute top-4 left-4 sm:top-6 sm:left-6">
+                Primary_Comms_Link
+              </span>
+              
+              {/* Responsive email with proper wrapping */}
+              <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight transition-transform duration-300 group-hover:scale-105 mb-4 break-words w-full px-2 mt-8 sm:mt-0 leading-tight">
+                {PERSONAL_INFO.email}
+              </h3>
+              
+              <div className="font-mono text-[10px] sm:text-xs tracking-widest uppercase flex items-center gap-2 mt-4 opacity-70 group-hover:opacity-100">
+                {copiedItem === "Email" ? (
+                  <><Check className="w-4 h-4" /> Data Copied to Clipboard</>
+                ) : (
+                  <>Click to Copy Address <ArrowRight className="w-4 h-4" /></>
+                )}
+              </div>
+            </div>
+
+            {/* Links & Resume Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4">
+               {/* LinkedIn */}
+               <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" onMouseEnter={playHoverSound} onClick={playClickSound} className="group p-6 border-b lg:border-b-0 border-r border-border hover:bg-[#0077b5] hover:text-white transition-colors flex flex-col items-center justify-center gap-3 aspect-square lg:aspect-auto">
+                 <Linkedin className="w-6 h-6 group-hover:scale-125 transition-transform" />
+                 <span className="font-mono text-[10px] tracking-widest uppercase mt-2">LinkedIn</span>
+               </a>
+
+               {/* GitHub */}
+               <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" onMouseEnter={playHoverSound} onClick={playClickSound} className="group p-6 border-b lg:border-b-0 border-r border-border hover:bg-foreground hover:text-background transition-colors flex flex-col items-center justify-center gap-3 aspect-square lg:aspect-auto">
+                 <Github className="w-6 h-6 group-hover:scale-125 transition-transform" />
+                 <span className="font-mono text-[10px] tracking-widest uppercase mt-2">GitHub</span>
+               </a>
+
+               {/* Preview Resume */}
+               <button onClick={() => { playClickSound(); setIsResumeModalOpen(true); }} onMouseEnter={playHoverSound} className="group p-6 border-r border-border hover:bg-secondary transition-colors flex flex-col items-center justify-center gap-3 aspect-square lg:aspect-auto">
+                 <Eye className="w-6 h-6 group-hover:scale-125 transition-transform text-foreground" />
+                 <span className="font-mono text-[10px] tracking-widest uppercase mt-2">View Doc</span>
+               </button>
+
+               {/* Download Resume */}
+               <a href={PERSONAL_INFO.resume} download onClick={() => { playClickSound(); toast.success("Resume sequence initiated."); }} onMouseEnter={playHoverSound} className="group p-6 bg-foreground text-background hover:bg-background hover:text-foreground border-l border-transparent hover:border-border transition-colors flex flex-col items-center justify-center gap-3 aspect-square lg:aspect-auto">
+                 <Download className="w-6 h-6 group-hover:-translate-y-2 transition-transform" />
+                 <span className="font-mono text-[10px] tracking-widest uppercase mt-2 text-center">Fetch PDF</span>
+               </a>
+            </div>
+
+          </motion.div>
+        </motion.div>
       </div>
+
+      <ResumeModal isOpen={isResumeModalOpen} onClose={() => setIsResumeModalOpen(false)} />
     </section>
   );
 }

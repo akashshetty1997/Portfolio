@@ -1,8 +1,7 @@
-// src/components/sections/skills-section.tsx
 "use client";
 
 import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
   Code2,
   Monitor,
@@ -11,14 +10,33 @@ import {
   Cloud,
   Brain,
   CheckCircle,
-  Layers,
+  Terminal,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SKILLS } from "@/lib/constants";
 import { useSoundEffect } from "@/hooks/use-sound";
 import { cn } from "@/lib/utils";
+
+// Strict, snappy animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 0.5, 
+      ease: [0.16, 1, 0.3, 1] as const
+    } 
+  },
+};
 
 type CategoryConfig = {
   icon: React.ElementType;
@@ -57,7 +75,7 @@ const categoryConfig: Record<string, CategoryConfig> = {
 };
 
 function getIconForCategory(categoryName: string): React.ElementType {
-  return categoryConfig[categoryName]?.icon || Code2;
+  return categoryConfig[categoryName]?.icon || Terminal;
 }
 
 export function SkillsSection() {
@@ -68,42 +86,62 @@ export function SkillsSection() {
   const [activeTab, setActiveTab] = useState(categories[0]);
 
   return (
-    <section id="skills" className="py-20 relative overflow-hidden" ref={ref}>
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
-          <Badge className="mb-4 px-4 py-1.5" variant="outline">
-            <Code2 className="w-3 h-3 mr-2" />
-            Skills
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Technical <span className="text-foreground">Stack</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            A comprehensive toolkit for building modern applications
-          </p>
-        </motion.div>
+    <section 
+      id="skills" 
+      className="relative min-h-screen bg-background pt-24 pb-32 overflow-hidden border-t border-border" 
+      ref={ref}
+    >
+      {/* Massive Background Typography Watermark */}
+      <div className="absolute top-20 left-0 w-full overflow-hidden pointer-events-none opacity-[0.03] select-none flex justify-center">
+        <h2 className="text-[clamp(8rem,20vw,25rem)] font-black leading-none whitespace-nowrap">
+          SKILLS
+        </h2>
+      </div>
 
-        {/* Tabbed Interface */}
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase mb-4 block">
+              04 // The Arsenal
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+              System <span className="text-transparent" style={{ WebkitTextStroke: "1.5px hsl(var(--foreground))" }}>Capabilities</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-sm font-mono text-muted-foreground uppercase flex flex-col items-start md:items-end"
+          >
+            <span>Comprehensive Toolkit</span>
+            <span>Modern Application Stack</span>
+          </motion.div>
+        </div>
+
+        {/* Brutalist Tabbed Interface */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-6xl mx-auto"
+          transition={{ duration: 0.6, delay: 0.3 }}
         >
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="w-full h-auto p-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2 mb-8 bg-secondary border border-border">
+            {/* Category Grid (The Tabs) */}
+            <TabsList className="w-full h-auto p-0 bg-transparent flex flex-wrap lg:grid lg:grid-cols-7 border-t border-l border-border mb-16 rounded-none">
               {categories.map((category) => {
                 const Icon = getIconForCategory(category);
+                const isActive = activeTab === category;
 
                 return (
                   <TabsTrigger
@@ -112,95 +150,93 @@ export function SkillsSection() {
                     onMouseEnter={playHoverSound}
                     onClick={playClickSound}
                     className={cn(
-                      "flex flex-col items-center gap-1.5 p-2.5 rounded-lg",
-                      "data-[state=active]:bg-background",
-                      "data-[state=active]:border data-[state=active]:border-border",
-                      "hover:bg-background/60 transition-all duration-200",
+                      "flex-1 lg:flex-none flex flex-col items-center justify-center gap-3 p-6 min-h-[120px]",
+                      "border-b border-r border-border rounded-none bg-background transition-all duration-300",
+                      "data-[state=active]:bg-foreground data-[state=active]:text-background",
+                      "hover:bg-secondary/20 data-[state=active]:hover:bg-foreground",
+                      "group"
                     )}
                   >
                     <Icon
                       className={cn(
-                        "w-5 h-5 transition-colors",
-                        activeTab === category
-                          ? "text-foreground"
-                          : "text-muted-foreground",
+                        "w-6 h-6 transition-transform duration-300 group-hover:scale-110",
+                        isActive ? "text-background" : "text-muted-foreground"
                       )}
                     />
-                    <span className="text-xs font-medium text-center hidden md:block">
-                      {category.split(" ")[0]}
+                    <span className="font-mono text-[10px] tracking-widest uppercase text-center leading-tight">
+                      {category.replace(" & ", " &\n")}
                     </span>
                   </TabsTrigger>
                 );
               })}
             </TabsList>
 
-            {categories.map((category) => {
-              const config = categoryConfig[category];
-              const Icon = getIconForCategory(category);
-              const data = SKILLS[category as keyof typeof SKILLS];
+            {/* Content Area */}
+            <div className="min-h-[400px]">
+              <AnimatePresence mode="wait">
+                {categories.map((category) => {
+                  if (activeTab !== category) return null;
+                  
+                  const config = categoryConfig[category];
+                  const data = SKILLS[category as keyof typeof SKILLS];
 
-              return (
-                <TabsContent key={category} value={category} className="mt-0">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Card className="bg-card border-border hover:border-foreground/20 transition-colors duration-200">
-                      <div className="p-6 border-b border-border">
-                        <div className="flex items-start gap-4">
-                          <div className="p-2 rounded-lg bg-secondary">
-                            <Icon className="w-5 h-5 text-foreground" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold mb-2">
+                  return (
+                    <TabsContent key={category} value={category} className="mt-0" asChild forceMount>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+                        className="w-full"
+                      >
+                        {/* Active Category Meta */}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 border-b border-border pb-4 gap-4">
+                          <div>
+                            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter mb-2">
                               {category}
                             </h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
                               {config?.description}
                             </p>
-                            <div className="flex items-center gap-3 mt-3">
-                              <Badge
-                                variant="outline"
-                                className="text-xs px-2 py-0.5"
-                              >
-                                <Layers className="w-3 h-3 mr-1" />
-                                {data.skills.length} skills
-                              </Badge>
-                            </div>
+                          </div>
+                          <div className="font-mono text-[10px] tracking-[0.2em] uppercase border border-foreground px-3 py-1 bg-foreground text-background">
+                            {data.skills.length} Modules Indexed
                           </div>
                         </div>
-                      </div>
 
-                      <CardContent className="p-6">
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {/* Brutalist Skills Grid */}
+                        <motion.div 
+                          variants={containerVariants}
+                          initial="hidden"
+                          animate="visible"
+                          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-t border-l border-border"
+                        >
                           {data.skills.map((skill, index) => (
                             <motion.div
                               key={skill}
-                              initial={{ opacity: 0, scale: 0.9 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{
-                                delay: index * 0.05,
-                                type: "spring",
-                                stiffness: 300,
-                              }}
-                              whileHover={{ scale: 1.05 }}
-                              onHoverStart={playHoverSound}
+                              variants={itemVariants}
+                              onMouseEnter={playHoverSound}
+                              className="group relative p-6 md:p-8 border-r border-b border-border hover:bg-foreground hover:text-background transition-colors duration-300 cursor-default flex flex-col justify-center items-center min-h-[120px] overflow-hidden"
                             >
-                              <div className="px-3 py-2 rounded-lg text-center bg-secondary border border-border hover:border-foreground/20 transition-colors duration-200 cursor-default group">
-                                <span className="text-sm font-medium group-hover:text-foreground transition-colors">
-                                  {skill}
-                                </span>
-                              </div>
+                              {/* Hover scanning line effect */}
+                              <div className="absolute top-0 left-0 w-full h-px bg-background/30 -translate-y-full group-hover:animate-[scan_2s_ease-in-out_infinite]" />
+                              
+                              <span className="font-mono text-[10px] text-muted-foreground/50 absolute top-2 left-2 tracking-widest group-hover:text-background/50 transition-colors">
+                                {(index + 1).toString().padStart(2, '0')}
+                              </span>
+                              
+                              <span className="text-xl md:text-2xl font-black tracking-tighter uppercase text-center z-10">
+                                {skill}
+                              </span>
                             </motion.div>
                           ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </TabsContent>
-              );
-            })}
+                        </motion.div>
+                      </motion.div>
+                    </TabsContent>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
           </Tabs>
         </motion.div>
       </div>

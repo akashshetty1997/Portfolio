@@ -1,12 +1,9 @@
-// src/components/sections/projects-section.tsx
 "use client";
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
-  Folder,
   Github,
-  ExternalLink,
   Calendar,
   User,
   ChevronRight,
@@ -14,74 +11,88 @@ import {
   X,
   Lock,
   Globe,
+  ArrowRight,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PROJECTS } from "@/lib/constants";
 import { useSoundEffect } from "@/hooks/use-sound";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+// Strict animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    transition: { 
+      duration: 0.7, 
+      ease: [0.16, 1, 0.3, 1] as const
+    } 
+  },
+};
+
+// Brutalist Image Component
 function ProjectImage({
   project,
-  index,
   className,
 }: {
   project: (typeof PROJECTS)[0];
-  index: number;
   className?: string;
 }) {
   const [imgError, setImgError] = useState(false);
 
   if (!project.image || imgError) {
     return (
-      <div
-        className={cn(
-          "flex items-center justify-center bg-muted",
-          className
-        )}
-      >
+      <div className={cn("flex items-center justify-center bg-muted/50 border border-border w-full h-full", className)}>
         <div className="text-center px-4">
-          <h3 className="text-2xl md:text-3xl font-bold text-muted-foreground tracking-tight">
+          <h3 className="text-xl md:text-3xl font-black uppercase tracking-tighter text-muted-foreground">
             {project.title}
           </h3>
-          <p className="text-sm text-muted-foreground/60 mt-2">{project.role}</p>
+          <p className="font-mono text-[10px] tracking-widest text-muted-foreground mt-2 uppercase">NO IMAGE DATA</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative w-full h-full overflow-hidden bg-muted group", className)}>
       <Image
         src={project.image}
         alt={project.title}
         fill
-        className="object-contain"
+        className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
         onError={() => setImgError(true)}
       />
+      {/* Stark Overlay Border */}
+      <div className="absolute inset-0 border-[8px] border-background mix-blend-overlay opacity-50 pointer-events-none" />
     </div>
   );
 }
 
+// Brutalist Modal/Dossier
 interface ProjectModalProps {
   project: (typeof PROJECTS)[0];
-  projectIndex: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalProps) {
+function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   const { playClickSound } = useSoundEffect();
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  const allImages =
-    project.screenshots && project.screenshots.length > 0
+  const allImages = project.screenshots && project.screenshots.length > 0
       ? project.screenshots
-      : project.image
-      ? [project.image]
-      : [];
+      : project.image ? [project.image] : [];
 
   const totalSlides = Math.ceil(allImages.length / 2);
 
@@ -94,244 +105,138 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
     <AnimatePresence>
       {isOpen && (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="max-w-[95vw] md:max-w-5xl max-h-[90vh] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50 shadow-2xl">
-            <motion.button
-              onClick={() => {
-                playClickSound();
-                onClose();
-              }}
-              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-background/80 backdrop-blur-xl border border-border/50 hover:bg-background/90 transition-all group"
-              whileHover={{ scale: 1.05, rotate: 90 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <X className="w-4 h-4 text-foreground/80 group-hover:text-foreground transition-colors" />
-            </motion.button>
+          <DialogContent className="max-w-[100vw] sm:max-w-[95vw] md:max-w-6xl max-h-[100vh] md:max-h-[90vh] p-0 overflow-hidden bg-background border-border shadow-2xl rounded-none flex flex-col">
+            
+            {/* Hidden Title for Accessibility */}
+            <DialogTitle className="sr-only">{project.title} Details</DialogTitle>
 
-            <div className="relative flex flex-col lg:flex-row h-full max-h-[90vh]">
-              {/* Left - Images */}
-              <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className="lg:w-[40%] p-6 bg-muted/30 flex flex-col justify-center"
+            {/* Brutalist Header Bar */}
+            <div className="flex justify-between items-center border-b border-border px-4 py-3 bg-foreground text-background">
+              <span className="font-mono text-xs uppercase tracking-widest flex items-center gap-2">
+                <span className="w-2 h-2 bg-background animate-pulse" />
+                System_Viewer: {project.title}
+              </span>
+              <button
+                onClick={() => { playClickSound(); onClose(); }}
+                className="hover:rotate-90 transition-transform duration-300 p-1"
               >
-                <div className="lg:hidden mb-4">
-                  <h2 className="text-2xl font-bold">{project.title}</h2>
-                </div>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-                <div className="relative">
-                  <div className="relative overflow-hidden rounded-xl bg-background/50 min-h-[280px]">
-                    <AnimatePresence mode="wait">
+            <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
+              
+              {/* Left Column - Images */}
+              <div className="lg:w-1/2 bg-muted/20 border-r border-border flex flex-col p-6 relative">
+                <div className="flex-1 relative min-h-[300px] lg:min-h-0 w-full border border-border bg-background overflow-hidden group">
+                   <AnimatePresence mode="wait">
                       <motion.div
                         key={currentSlideIndex}
-                        initial={{ x: 200, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        exit={{ x: -200, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 1.05 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] as const }}
+                        className="absolute inset-0 w-full h-full"
                       >
                         {allImages.length === 0 ? (
-                          <div className="h-[280px] lg:h-[360px] flex items-center justify-center bg-muted rounded-xl">
-                            <div className="text-center px-6">
-                              <h3 className="text-3xl font-bold text-muted-foreground">
-                                {project.title}
-                              </h3>
-                              <p className="text-sm text-muted-foreground/60 mt-2">
-                                {project.role}
-                              </p>
-                            </div>
-                          </div>
+                           <div className="flex items-center justify-center w-full h-full">
+                             <span className="font-mono text-xs text-muted-foreground tracking-widest">AWAITING_VISUALS</span>
+                           </div>
                         ) : allImages.length === 1 ? (
-                          <div className="relative w-full h-[280px] lg:h-[360px]">
-                            <Image
-                              src={allImages[0]}
-                              alt={project.title}
-                              fill
-                              className="object-contain p-4"
-                            />
-                          </div>
+                          <Image src={allImages[0]} alt={project.title} fill className="object-contain p-4 grayscale group-hover:grayscale-0 transition-all duration-700" />
                         ) : (
-                          <div className="grid grid-cols-2 gap-2 p-2 h-[280px] lg:h-[360px]">
+                          <div className="grid grid-cols-2 gap-px bg-border w-full h-full">
                             {getCurrentImages().map((image, idx) => (
-                              <div
-                                key={`${currentSlideIndex}-${idx}`}
-                                className="relative bg-background/30 rounded-lg border border-border/20 overflow-hidden"
-                              >
-                                <Image
-                                  src={image}
-                                  alt={`${project.title} - ${currentSlideIndex * 2 + idx + 1}`}
-                                  fill
-                                  className="object-contain p-2"
-                                />
-                                <div className="absolute bottom-2 right-2">
-                                  <Badge
-                                    variant="secondary"
-                                    className="text-xs bg-background/80 backdrop-blur-sm"
-                                  >
-                                    {currentSlideIndex * 2 + idx + 1}
-                                  </Badge>
-                                </div>
+                              <div key={idx} className="relative bg-background">
+                                <Image src={image} alt={`Screenshot ${idx}`} fill className="object-contain p-4 grayscale group-hover:grayscale-0 transition-all duration-700" />
                               </div>
                             ))}
                           </div>
                         )}
                       </motion.div>
-                    </AnimatePresence>
-                  </div>
-
-                  {totalSlides > 1 && (
-                    <>
-                      <button
-                        onClick={() => {
-                          playClickSound();
-                          setCurrentSlideIndex((p) =>
-                            p === 0 ? totalSlides - 1 : p - 1
-                          );
-                        }}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/90 border border-border/50 hover:bg-background shadow-lg transition-all hover:scale-110"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          playClickSound();
-                          setCurrentSlideIndex((p) =>
-                            p === totalSlides - 1 ? 0 : p + 1
-                          );
-                        }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-background/90 border border-border/50 hover:bg-background shadow-lg transition-all hover:scale-110"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
+                   </AnimatePresence>
                 </div>
 
+                {/* Slider Controls (if multiple) */}
                 {totalSlides > 1 && (
-                  <div className="flex justify-center gap-1.5 mt-4">
-                    {Array.from({ length: totalSlides }).map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          playClickSound();
-                          setCurrentSlideIndex(i);
-                        }}
-                        className={cn(
-                          "rounded-full transition-all duration-300",
-                          currentSlideIndex === i
-                            ? "w-6 h-2 bg-primary"
-                            : "w-2 h-2 bg-primary/30 hover:bg-primary/50"
-                        )}
-                      />
-                    ))}
+                  <div className="flex justify-between items-center mt-4 border-t border-border pt-4">
+                    <button onClick={() => { playClickSound(); setCurrentSlideIndex(p => p === 0 ? totalSlides - 1 : p - 1); }} className="font-mono text-xs uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-1">
+                      <ChevronLeft className="w-4 h-4" /> PREV
+                    </button>
+                    <span className="font-mono text-[10px] text-muted-foreground">{currentSlideIndex + 1} / {totalSlides}</span>
+                    <button onClick={() => { playClickSound(); setCurrentSlideIndex(p => p === totalSlides - 1 ? 0 : p + 1); }} className="font-mono text-xs uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-1">
+                      NEXT <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
                 )}
+              </div>
 
-                {/* Action buttons */}
-                <div className="flex gap-3 justify-center mt-6">
-                  {project.github && !project.isprivate && (
-                    <motion.button
-                      onClick={() => {
-                        playClickSound();
-                        window.open(project.github, "_blank");
-                      }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 rounded-lg bg-background/50 border border-border/50 hover:bg-background/80 transition-all text-sm font-medium flex items-center gap-2"
-                    >
-                      <Github className="w-4 h-4" />
-                      Code
-                    </motion.button>
-                  )}
-                  {project.isprivate && (
-                    <div className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-medium flex items-center gap-2 text-muted-foreground">
-                      <Lock className="w-4 h-4" />
-                      Private Repo
-                    </div>
-                  )}
-                  {project.live && (
-                    <motion.button
-                      onClick={() => {
-                        playClickSound();
-                        if (project.live) window.open(project.live, "_blank");
-                      }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium flex items-center gap-2"
-                    >
-                      <Globe className="w-4 h-4" />
-                      Live Demo
-                    </motion.button>
-                  )}
+              {/* Right Column - Data Dossier */}
+              <div className="lg:w-1/2 p-6 lg:p-10 overflow-y-auto">
+                <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+                  {project.title}
+                </h2>
+                
+                <div className="flex flex-wrap gap-4 border-b border-border pb-6 mb-6">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Deployment</span>
+                    <span className="font-bold text-sm flex items-center gap-2"><Calendar className="w-3.5 h-3.5"/> {project.duration}</span>
+                  </div>
+                  <div className="w-px bg-border" />
+                  <div className="flex flex-col gap-1">
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Role</span>
+                    <span className="font-bold text-sm flex items-center gap-2"><User className="w-3.5 h-3.5"/> {project.role}</span>
+                  </div>
                 </div>
-              </motion.div>
 
-              {/* Right - Details */}
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className="lg:w-[60%] p-6 lg:p-8 overflow-y-auto"
-              >
-                <div className="space-y-6 max-w-2xl">
-                  <div className="hidden lg:block">
-                    <h2 className="text-3xl font-bold mb-3">{project.title}</h2>
+                <div className="space-y-8">
+                  <div>
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">System Overview</span>
+                    <p className="text-foreground/80 leading-relaxed text-sm md:text-base">{project.longDescription}</p>
+                  </div>
+
+                  <div>
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest block mb-4">Core Architecture</span>
                     <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline" className="text-xs">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {project.duration}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        <User className="w-3 h-3 mr-1" />
-                        {project.role}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">
-                      Overview
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
-                      {project.longDescription}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                      Key Achievements
-                    </h3>
-                    <div className="space-y-2">
-                      {project.highlights.map((highlight, i) => (
-                        <motion.div
-                          key={i}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.3 + i * 0.05 }}
-                          className="flex items-start gap-2.5 text-sm"
-                        >
-                          <ChevronRight className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
-                          <span className="text-muted-foreground leading-relaxed">
-                            {highlight}
-                          </span>
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
-                      Tech Stack
-                    </h3>
-                    <div className="flex flex-wrap gap-1.5">
                       {project.technologies.map((tech, i) => (
-                        <Badge key={i} variant="secondary" className="text-xs">
-                          {tech}
-                        </Badge>
+                        <Badge key={i} variant="outline" className="rounded-none border-border bg-transparent text-[10px] font-mono tracking-widest uppercase">{tech}</Badge>
                       ))}
                     </div>
+                  </div>
+
+                  <div>
+                    <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest block mb-3">Execution Highlights</span>
+                    <ul className="space-y-3 border-l-2 border-primary/30 pl-4">
+                      {project.highlights.map((highlight, i) => (
+                        <li key={i} className="text-sm text-foreground/80 leading-relaxed">{highlight}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-              </motion.div>
+
+                {/* Actions Grid */}
+                <div className="grid grid-cols-2 gap-4 mt-10 pt-6 border-t border-border">
+                   {project.github && !project.isprivate && (
+                    <button onClick={() => { playClickSound(); window.open(project.github, "_blank"); }} className="p-4 border border-border hover:bg-foreground hover:text-background transition-colors flex flex-col items-center justify-center gap-2 group">
+                      <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <span className="font-mono text-xs uppercase tracking-widest">Source Code</span>
+                    </button>
+                   )}
+                   {project.isprivate && (
+                    <div className="p-4 border border-border bg-muted/20 flex flex-col items-center justify-center gap-2 text-muted-foreground opacity-70">
+                      <Lock className="w-5 h-5" />
+                      <span className="font-mono text-xs uppercase tracking-widest">Classified</span>
+                    </div>
+                   )}
+                   {project.live && (
+                    <button onClick={() => { playClickSound(); window.open(project.live!, "_blank"); }} className="p-4 bg-foreground text-background border border-foreground hover:bg-transparent hover:text-foreground transition-colors flex flex-col items-center justify-center gap-2 group">
+                      <Globe className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                      <span className="font-mono text-xs uppercase tracking-widest">Initialize Live Demo</span>
+                    </button>
+                   )}
+                </div>
+              </div>
+
             </div>
           </DialogContent>
         </Dialog>
@@ -344,262 +249,143 @@ export function ProjectsSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { playClickSound, playHoverSound } = useSoundEffect();
-  const [selectedProject, setSelectedProject] = useState<{
-    project: (typeof PROJECTS)[0];
-    index: number;
-  } | null>(null);
+  const [selectedProject, setSelectedProject] = useState<{ project: (typeof PROJECTS)[0]; index: number } | null>(null);
+
+  // Split projects
+  const featuredProject = PROJECTS[0];
+  const gridProjects = PROJECTS.slice(1);
 
   return (
-    <section id="projects" className="py-20 relative" ref={ref}>
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+    <section id="projects" className="relative min-h-screen bg-background pt-24 pb-32 overflow-hidden border-t border-border" ref={ref}>
+      {/* Massive Background Typography Watermark */}
+      <div className="absolute top-20 left-0 w-full overflow-hidden pointer-events-none opacity-[0.03] select-none flex justify-center">
+        <h2 className="text-[clamp(8rem,20vw,25rem)] font-black leading-none whitespace-nowrap">
+          PROJECTS
+        </h2>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-14"
-        >
-          <Badge className="mb-4 px-4 py-1.5" variant="outline">
-            <Folder className="w-3 h-3 mr-2" />
-            Projects
-          </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            What I&apos;ve <span className="text-gradient">Built</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real-world applications that solve real problems
-          </p>
-        </motion.div>
-
-        {/* Featured project - Supatrack (full width) */}
-        {PROJECTS.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="max-w-5xl mx-auto mb-8"
-          >
-            <Card
-              className="group bg-card border-border hover:border-foreground/20 transition-all duration-300 cursor-pointer overflow-hidden"
-              onClick={() => {
-                playClickSound();
-                setSelectedProject({ project: PROJECTS[0], index: 0 });
-              }}
-            >
-              <div className="flex flex-col md:flex-row">
-                {/* Image */}
-                <div className="relative md:w-2/5 h-56 md:h-auto bg-muted overflow-hidden">
-                  <ProjectImage
-                    project={PROJECTS[0]}
-                    index={0}
-                    className="absolute inset-0 group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {PROJECTS[0].live && (
-                    <div className="absolute top-3 left-3">
-                      <Badge variant="secondary" className="text-xs">
-                        <span className="relative flex h-1.5 w-1.5 mr-1.5">
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-foreground" />
-                        </span>
-                        Live
-                      </Badge>
-                    </div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="md:w-3/5 p-6">
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <Badge variant="outline" className="text-xs mb-2">
-                        Featured Project
-                      </Badge>
-                      <h3 className="text-xl font-bold group-hover:text-primary transition-colors">
-                        {PROJECTS[0].title}
-                      </h3>
-                    </div>
-                    <Badge variant="secondary" className="text-xs shrink-0">
-                      {PROJECTS[0].duration}
-                    </Badge>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                    {PROJECTS[0].description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {PROJECTS[0].technologies.slice(0, 6).map((tech, idx) => (
-                      <Badge key={idx} variant="secondary" className="text-xs">
-                        {tech}
-                      </Badge>
-                    ))}
-                    {PROJECTS[0].technologies.length > 6 && (
-                      <Badge variant="secondary" className="text-xs opacity-60">
-                        +{PROJECTS[0].technologies.length - 6}
-                      </Badge>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-4 text-sm">
-                    {PROJECTS[0].isprivate && (
-                      <span className="flex items-center gap-1 text-muted-foreground text-xs">
-                        <Lock className="w-3 h-3" />
-                        Private
-                      </span>
-                    )}
-                    {PROJECTS[0].github && !PROJECTS[0].isprivate && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          playClickSound();
-                          window.open(PROJECTS[0].github, "_blank");
-                        }}
-                        className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        <Github className="w-4 h-4" />
-                        Code
-                      </button>
-                    )}
-                    {PROJECTS[0].live && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          playClickSound();
-                          if (PROJECTS[0].live) window.open(PROJECTS[0].live, "_blank");
-                        }}
-                        className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                        App Store
-                      </button>
-                    )}
-                    <span className="ml-auto flex items-center gap-1 text-primary text-sm font-medium">
-                      View Details
-                      <ChevronRight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Card>
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+          <motion.div initial={{ opacity: 0, x: -20 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6 }}>
+            <span className="font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase mb-4 block">
+              03 // The Work
+            </span>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+              Selected <span className="text-transparent" style={{ WebkitTextStroke: "1.5px hsl(var(--foreground))" }}>Builds</span>
+            </h2>
           </motion.div>
-        )}
 
-        {/* Other projects grid */}
-        <div className="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-          {PROJECTS.slice(1).map((project, index) => {
-            const actualIndex = index + 1;
-            return (
-              <motion.div
-                key={actualIndex}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                onMouseEnter={playHoverSound}
-              >
-                <Card
-                  className="group h-full bg-card border-border hover:border-foreground/20 transition-all duration-300 cursor-pointer overflow-hidden"
-                  onClick={() => {
-                    playClickSound();
-                    setSelectedProject({ project, index: actualIndex });
-                  }}
-                >
-                  {/* Image / Fallback */}
-                  <div className="relative h-40 overflow-hidden">
-                    <ProjectImage
-                      project={project}
-                      index={actualIndex}
-                      className="absolute inset-0 group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute top-3 right-3">
-                      <Badge
-                        variant="secondary"
-                        className="text-xs bg-background/80 backdrop-blur-sm"
-                      >
-                        {project.duration.split(" - ")[0]}
-                      </Badge>
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={isInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6, delay: 0.2 }} className="text-sm font-mono text-muted-foreground uppercase flex flex-col items-start md:items-end">
+            <span>Architecture & Engineering</span>
+            <span>Real-World Applications</span>
+          </motion.div>
+        </div>
+
+        <motion.div variants={containerVariants} initial="hidden" animate={isInView ? "visible" : "hidden"} className="border-t-[2px] border-foreground">
+          
+          {/* Featured Project (Full Width Row) */}
+          {featuredProject && (
+            <motion.div variants={itemVariants} className="group border-b border-border flex flex-col lg:flex-row" onMouseEnter={playHoverSound}>
+               {/* Featured Image */}
+               <div 
+                  className="w-full lg:w-3/5 aspect-video lg:aspect-auto relative border-b lg:border-b-0 lg:border-r border-border cursor-pointer overflow-hidden"
+                  onClick={() => { playClickSound(); setSelectedProject({ project: featuredProject, index: 0 }); }}
+               >
+                 <ProjectImage project={featuredProject} />
+                 <div className="absolute top-4 left-4 bg-foreground text-background font-mono text-[10px] tracking-widest uppercase px-3 py-1 shadow-lg z-10">
+                   Primary Output
+                 </div>
+               </div>
+               
+               {/* Featured Content */}
+               <div className="w-full lg:w-2/5 flex flex-col justify-between p-6 lg:p-10 hover:bg-secondary/10 transition-colors">
+                  <div>
+                    <div className="flex justify-between items-start mb-6">
+                       <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter leading-none group-hover:text-primary transition-colors cursor-pointer" onClick={() => { playClickSound(); setSelectedProject({ project: featuredProject, index: 0 }); }}>
+                         {featuredProject.title}
+                       </h3>
+                    </div>
+                    <p className="text-foreground/80 leading-relaxed mb-8 text-sm md:text-base">
+                      {featuredProject.description}
+                    </p>
+                    <div className="mb-8">
+                       <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase block mb-3 border-b border-foreground/10 pb-2">Core Stack</span>
+                       <div className="flex flex-wrap gap-2">
+                         {featuredProject.technologies.slice(0, 6).map((tech, idx) => (
+                           <Badge key={idx} variant="outline" className="rounded-none border-border bg-transparent text-[10px] font-mono tracking-widest uppercase">{tech}</Badge>
+                         ))}
+                       </div>
                     </div>
                   </div>
 
-                  <CardContent className="p-4">
-                    <h3 className="text-base font-bold mb-1.5 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
-                      {project.description}
-                    </p>
+                  <div className="grid grid-cols-2 gap-4 mt-auto pt-6 border-t border-border">
+                    <button onClick={() => { playClickSound(); setSelectedProject({ project: featuredProject, index: 0 }); }} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-widest hover:text-primary transition-colors py-2 border border-transparent hover:border-primary">
+                      Inspect <ArrowRight className="w-3 h-3" />
+                    </button>
+                    {featuredProject.live && (
+                      <button onClick={() => { playClickSound(); window.open(featuredProject.live!, "_blank"); }} className="flex items-center justify-center gap-2 font-mono text-xs uppercase tracking-widest bg-foreground text-background hover:bg-transparent hover:text-foreground border border-foreground transition-colors py-2">
+                        Execute Live
+                      </button>
+                    )}
+                  </div>
+               </div>
+            </motion.div>
+          )}
 
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {project.technologies.slice(0, 4).map((tech, idx) => (
-                        <Badge
-                          key={idx}
-                          variant="secondary"
-                          className="text-xs px-1.5 py-0"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                      {project.technologies.length > 4 && (
-                        <Badge
-                          variant="secondary"
-                          className="text-xs px-1.5 py-0 opacity-60"
-                        >
-                          +{project.technologies.length - 4}
-                        </Badge>
-                      )}
+          {/* Secondary Projects Grid (Strict CSS Grid) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {gridProjects.map((project, index) => {
+              const actualIndex = index + 1;
+              return (
+                <motion.div 
+                  key={actualIndex} 
+                  variants={itemVariants} 
+                  className="group border-b border-r border-border hover:bg-secondary/10 transition-colors flex flex-col h-full cursor-pointer"
+                  onMouseEnter={playHoverSound}
+                  onClick={() => { playClickSound(); setSelectedProject({ project, index: actualIndex }); }}
+                >
+                  <div className="aspect-[4/3] w-full border-b border-border relative overflow-hidden">
+                    <ProjectImage project={project} />
+                  </div>
+                  
+                  <div className="p-6 flex flex-col flex-1 justify-between">
+                    <div>
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest">Build {actualIndex.toString().padStart(2, '0')}</span>
+                        {project.isprivate && <Lock className="w-3 h-3 text-muted-foreground" />}
+                      </div>
+                      <h3 className="text-xl font-black uppercase tracking-tighter mb-3 group-hover:text-primary transition-colors">
+                        {project.title}
+                      </h3>
+                      <p className="text-sm text-foreground/70 line-clamp-2 mb-6 leading-relaxed">
+                        {project.description}
+                      </p>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs pt-2 border-t border-border/40">
-                      {project.isprivate && (
-                        <span className="flex items-center gap-1 text-muted-foreground">
-                          <Lock className="w-3 h-3" />
-                          Private
-                        </span>
-                      )}
-                      {project.github && !project.isprivate && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            playClickSound();
-                            window.open(project.github, "_blank");
-                          }}
-                          className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <Github className="w-3.5 h-3.5" />
-                          Code
-                        </button>
-                      )}
-                      {project.live && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            playClickSound();
-                            if (project.live) window.open(project.live, "_blank");
-                          }}
-                          className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <Globe className="w-3.5 h-3.5" />
-                          Live
-                        </button>
-                      )}
-                      <span className="ml-auto flex items-center gap-1 text-primary font-medium">
-                        Details
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      </span>
+                    <div>
+                      <div className="flex flex-wrap gap-1.5 pt-4 border-t border-border/50">
+                        {project.technologies.slice(0, 3).map((tech, idx) => (
+                          <span key={idx} className="font-mono text-[9px] uppercase tracking-widest border border-border px-1.5 py-0.5 text-muted-foreground">{tech}</span>
+                        ))}
+                        {project.technologies.length > 3 && (
+                          <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground py-0.5">+{project.technologies.length - 3}</span>
+                        )}
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            );
-          })}
-        </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+        </motion.div>
       </div>
 
       {selectedProject && (
         <ProjectModal
           project={selectedProject.project}
-          projectIndex={selectedProject.index}
           isOpen={!!selectedProject}
           onClose={() => setSelectedProject(null)}
         />

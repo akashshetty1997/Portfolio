@@ -98,7 +98,7 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] as const }}
         >
           <h1 className="font-black text-[clamp(4rem,14vw,16rem)] leading-[0.85] tracking-tighter text-foreground m-0 p-0">
             {PERSONAL_INFO.firstName.toUpperCase()}
@@ -108,7 +108,7 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0, x: 50 }}
           animate={isInView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] as const }}
           className="flex justify-start sm:justify-end w-full mt-2 sm:mt-0"
         >
           {/* Webkit text stroke creates the hollow text effect */}

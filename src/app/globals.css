@@ -165,6 +165,12 @@
   a {
     -webkit-tap-highlight-color: transparent;
   }
+
+  /* Custom cursor support - hide default cursor when custom cursor is active */
+  body.custom-cursor-active,
+  body.custom-cursor-active * {
+    cursor: none !important;
+  }
 }
 
 /* Custom Animations */

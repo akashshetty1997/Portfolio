@@ -1,124 +1,103 @@
 {
-  "sectionTitle": "Skills & Technologies",
+  "sectionTitle": "Technical Stack",
   "sectionSubtitle": "A comprehensive toolkit for building modern applications",
   "categories": {
+    "Programming Languages": {
+      "icon": "💻",
+      "skills": [
+        "Java",
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "C++",
+        "SQL",
+        "Ruby",
+        "Scala",
+        "Go",
+        "Dart"
+      ]
+    },
     "Frontend & Mobile": {
       "icon": "🎨",
       "skills": [
-        "React.js",
+        "React",
         "Next.js",
         "Vue.js",
-        "Nuxt.js",
         "Flutter",
-        "React Native",
-        "TypeScript",
-        "JavaScript (ES6+)",
-        "Dart",
         "HTML5/CSS3",
         "Tailwind CSS",
-        "Material-UI",
-        "Redux",
-        "Vuex",
-        "Zustand",
         "Framer Motion",
-        "SASS/SCSS",
-        "Responsive Design",
-        "PWA"
+        "Redux",
+        "Responsive Design"
       ]
     },
     "Backend": {
       "icon": "⚙️",
       "skills": [
-        "Node.js",
-        "Python",
+        "Spring Boot",
         "FastAPI",
+        "Node.js",
         "Express.js",
         "Django",
         "Flask",
+        "RESTful APIs",
         "GraphQL",
-        "REST APIs",
-        "WebSockets",
-        "JWT Auth",
-        "OAuth 2.0",
-        "Microservices",
-        "Serverless",
-        "API Gateway",
-        "Message Queues"
+        "WebSocket",
+        "Microservices"
       ]
     },
-    "Database & Storage": {
+    "Databases": {
       "icon": "🗄️",
       "skills": [
         "PostgreSQL",
-        "MongoDB",
         "MySQL",
+        "MongoDB",
         "Redis",
-        "Elasticsearch",
-        "Firebase Firestore",
-        "DynamoDB",
-        "S3",
-        "SQLite",
-        "Prisma ORM",
-        "Mongoose",
-        "Database Design",
-        "Query Optimization"
+        "Firebase",
+        "SQL Server"
       ]
     },
     "Cloud & DevOps": {
       "icon": "☁️",
       "skills": [
         "AWS (EC2, S3, Lambda)",
-        "Google Cloud Platform",
-        "Vercel",
-        "Netlify",
+        "GCP",
         "Docker",
         "Kubernetes",
-        "CI/CD Pipelines",
-        "GitHub Actions",
         "Jenkins",
+        "Git",
+        "CI/CD",
+        "Linux",
         "Nginx",
-        "CloudFlare",
-        "Monitoring (Sentry)",
-        "Load Balancing",
-        "SSL/TLS"
+        "Vercel"
+      ]
+    },
+    "ML/AI & Data": {
+      "icon": "🤖",
+      "skills": [
+        "TensorFlow",
+        "PyTorch",
+        "scikit-learn",
+        "Pandas",
+        "NumPy",
+        "LangChain",
+        "OpenCV",
+        "Computer Vision",
+        "NLP",
+        "LLM"
       ]
     },
     "Testing & Quality": {
       "icon": "✅",
       "skills": [
+        "JUnit",
+        "Mockito",
         "Jest",
-        "React Testing Library",
         "Cypress",
         "Playwright",
         "PyTest",
-        "Unit Testing",
-        "Integration Testing",
-        "E2E Testing",
-        "TDD/BDD",
         "Code Reviews",
-        "ESLint",
-        "Prettier",
-        "SonarQube"
-      ]
-    },
-    "Tools & Workflow": {
-      "icon": "🛠️",
-      "skills": [
-        "Git & GitHub",
-        "VS Code",
-        "Figma",
-        "Postman",
-        "Jira",
-        "Agile/Scrum",
-        "Linux/Unix",
-        "Webpack",
-        "Vite",
-        "npm/yarn/pnpm",
-        "Chrome DevTools",
-        "Xcode",
-        "Android Studio",
-        "Notion",
-        "Copilot"
+        "TDD"
       ]
     }
   }

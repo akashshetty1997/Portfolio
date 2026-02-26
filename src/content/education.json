@@ -6,12 +6,12 @@
       "degree": "Master of Science in Computer Science",
       "location": "Boston, MA",
       "duration": "Jan 2025 - May 2027",
+      "gpa": "3.4/4.0",
       "coursework": [
         "Program Design Paradigms",
-        "Algorithms",
-
-        "Database Management Systems",
-        "Web Development"
+        "Algorithms and Data Structures",
+        "Pattern Recognition and Computer Vision",
+        "Natural Language Processing"
       ]
     },
     {
@@ -19,11 +19,12 @@
       "degree": "Bachelor of Computer Applications",
       "location": "Jaipur, India",
       "duration": "Oct 2021 - Dec 2024",
+      "gpa": "3.2/4.0",
       "coursework": [
-        "Data structures & Algorithms",
+        "Data Structures and Algorithms",
         "Operating Systems",
-        "Software Engineering",
-        "Java Programming"
+        "Database Management",
+        "Software Engineering"
       ]
     }
   ]

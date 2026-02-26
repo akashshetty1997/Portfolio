@@ -27,6 +27,7 @@ export interface Education {
   location: string;
   duration: string;
   coursework: string[];
+  gpa?: string;
 }
 
 export interface Experience {

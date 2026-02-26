@@ -96,23 +96,28 @@ export function CustomCursor() {
     };
   }, []);
 
+  // Apply cursor: none to body on mount
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    // Add cursor: none to document root
+    document.documentElement.style.cursor = 'none';
+    document.body.style.cursor = 'none';
+    
+    // Add class to body for CSS targeting
+    document.body.classList.add('custom-cursor-active');
+    
+    return () => {
+      document.documentElement.style.cursor = '';
+      document.body.style.cursor = '';
+      document.body.classList.remove('custom-cursor-active');
+    };
+  }, [isVisible]);
+
   if (!isVisible) return null;
 
   return (
     <>
-      <style jsx global>{`
-        body {
-          cursor: none !important;
-        }
-        a,
-        button,
-        input,
-        textarea,
-        select,
-        [role="button"] {
-          cursor: none !important;
-        }
-      `}</style>
 
       {/* Dot */}
       <div

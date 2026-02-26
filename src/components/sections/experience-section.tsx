@@ -7,13 +7,9 @@ import {
   Briefcase,
   Calendar,
   MapPin,
-  ArrowRight,
-  Code2,
-  Building2,
-  Rocket,
-  Zap,
+  ChevronRight,
+  Circle,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EXPERIENCE } from "@/lib/constants";
 import { useSoundEffect } from "@/hooks/use-sound";
@@ -23,26 +19,23 @@ export function ExperienceSection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { playHoverSound } = useSoundEffect();
 
-  const roleIcons = [Code2, Rocket, Building2];
-
   return (
     <section
       id="experience"
       className="py-20 relative overflow-hidden"
       ref={ref}
     >
-      {/* Standardized Background - same as other sections */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header - standardized */}
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
           <Badge className="mb-4 px-4 py-1.5" variant="outline">
             <Briefcase className="w-3 h-3 mr-2" />
@@ -52,98 +45,131 @@ export function ExperienceSection() {
             Professional <span className="text-gradient">Journey</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            4+ years of building scalable applications and leading development teams
+            4+ years of building scalable applications and leading development
+            teams
           </p>
         </motion.div>
 
-        {/* Experience Cards - standardized card styling */}
-        <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-6">
-            {EXPERIENCE.map((exp, index) => {
-              const Icon = roleIcons[index % roleIcons.length];
+        {/* Timeline */}
+        <div className="max-w-3xl mx-auto relative">
+          {/* Vertical line */}
+          <motion.div
+            className="absolute left-[19px] md:left-[23px] top-2 bottom-2 w-px"
+            style={{
+              background:
+                "linear-gradient(to bottom, hsl(var(--primary) / 0.4), hsl(var(--primary) / 0.15))",
+            }}
+            initial={{ scaleY: 0, originY: 0 }}
+            animate={isInView ? { scaleY: 1 } : {}}
+            transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
+          />
 
-              return (
+          {EXPERIENCE.map((exp, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{
+                duration: 0.5,
+                delay: 0.3 + index * 0.2,
+              }}
+              className="relative pl-14 md:pl-16 pb-14 last:pb-0 group"
+              onMouseEnter={playHoverSound}
+            >
+              {/* Timeline node */}
+              <div className="absolute left-0 top-1">
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.2 + index * 0.1,
-                  }}
-                  onMouseEnter={playHoverSound}
-                  className="group"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-primary/30 bg-background flex items-center justify-center group-hover:border-primary/60 transition-colors duration-300"
+                  whileHover={{ scale: 1.1 }}
                 >
-                  {/* Standardized Card - matching other sections */}
-                  <Card className="h-full bg-background/60 backdrop-blur-sm border-border/50 hover:border-border/80 transition-all duration-300">
-                    <CardContent className="p-6 h-full flex flex-col">
-                      {/* Header Section */}
-                      <div className="mb-4">
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-primary/10">
-                              <Icon className="w-5 h-5 text-primary" />
-                            </div>
-                            <div>
-                              <h3 className="text-lg font-semibold">
-                                {exp.title}
-                              </h3>
-                              <p className="text-sm font-medium text-primary">
-                                {exp.company}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>{exp.duration}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            <span>{exp.location}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Description - standardized height */}
-                      <div className="flex-1 space-y-2 mb-4">
-                        {exp.description.slice(0, 3).map((item, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-start gap-2 text-sm text-muted-foreground"
-                          >
-                            <ArrowRight className="w-3 h-3 text-primary/60 mt-0.5 flex-shrink-0" />
-                            <span className="line-clamp-2">{item}</span>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Technologies - standardized */}
-                      <div className="space-y-3">
-
-
-                        {/* Achievements bar - standardized */}
-                        {exp.achievements && (
-                          <div className="flex items-center gap-3 pt-3 border-t border-border/50 text-xs">
-                            {Object.entries(exp.achievements).slice(0, 1).map(([key, value]) => (
-                              <div key={key} className="flex items-center gap-1">
-                                <Zap className="w-3 h-3 text-yellow-500" />
-                                <span className="font-medium">{value}</span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-primary/60 group-hover:bg-primary transition-colors duration-300" />
                 </motion.div>
-              );
-            })}
-          </div>
+              </div>
 
+              {/* Content */}
+              <div className="rounded-xl border border-border/50 bg-background/60 backdrop-blur-sm p-5 md:p-6 hover:border-primary/30 transition-all duration-300">
+                {/* Company & Role header */}
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+                  <div>
+                    <h3 className="text-lg font-bold">{exp.title}</h3>
+                    <p className="text-primary font-medium text-sm">
+                      {exp.company}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {exp.duration}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {exp.location}
+                    </span>
+                  </div>
+                </div>
 
+                {/* Key metrics row */}
+                {exp.achievements && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {Object.entries(exp.achievements).map(([key, value]) => (
+                      <span
+                        key={key}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary"
+                      >
+                        <Circle className="w-1.5 h-1.5 fill-current" />
+                        {value}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Description bullets */}
+                <div className="space-y-2 mb-4">
+                  {exp.description.slice(0, 3).map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-2 text-sm text-muted-foreground leading-relaxed"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5 text-primary/50 mt-0.5 shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Tech tags */}
+                <div className="flex flex-wrap gap-1.5 pt-3 border-t border-border/40">
+                  {exp.technologies.map((tech, idx) => (
+                    <Badge
+                      key={idx}
+                      variant="secondary"
+                      className="text-xs px-2 py-0.5 font-normal"
+                    >
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Bottom node - next step */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.5, delay: 1.2 }}
+            className="relative pl-14 md:pl-16 pt-2"
+          >
+            <div className="absolute left-0 top-2">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-dashed border-primary/30 bg-background flex items-center justify-center">
+                <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-primary/30 animate-pulse" />
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground pt-2.5">
+              <span className="font-medium text-primary/70">Summer 2026</span>
+              <span className="mx-2">·</span>
+              Your company?
+            </p>
+          </motion.div>
         </div>
       </div>
     </section>

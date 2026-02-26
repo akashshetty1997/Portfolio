@@ -5,35 +5,34 @@
   "email": "shridharshetty.a@northeastern.edu",
   "phone": "617-694-1895",
   "location": "Boston, MA",
-  "tagline": "Turning complex problems into simple, impactful solutions",
-  "status": "Available for opportunities",
+  "tagline": "Building scalable systems that solve real problems",
+  "status": "Seeking Summer 2026 SWE Internship",
   "github": "https://github.com/akashshetty1997",
   "linkedin": "https://linkedin.com/in/akashshetty1997",
   "resume": "/documents/akash_shetty_resume.pdf",
   "aboutMe": {
-    "title": "Passionate Developer & Problem Solver",
-    "subtitle": "Full Stack Developer with a knack for creating elegant solutions to complex problems.",
-    "description": "Currently pursuing my Master's degree while building innovative applications that make a difference.",
+    "title": "Software Engineer | MS CS at Northeastern",
+    "subtitle": "4+ years of production experience building full-stack applications at startups.",
+    "description": "Currently pursuing my Master's in Computer Science while shipping products used by thousands.",
     "summary": [
-      "Five years ago in India, I wrote my first function. Today in Boston, I’m architecting full-stack systems while pursuing my MS at Northeastern. The path so far has been Flutter apps, React dashboards, Python APIs, TensorFlow models—and enough debugging sessions to make me question reality. What keeps me hooked is that moment when messy requirements turn into clean solutions and users say, “this just makes sense.”",
-
-"Right now, I’m obsessed with making nutrition tracking actually useful (building Supatrack with ML-powered food recognition) and proving that grad school and side projects can coexist. Spoiler: they can—but only if you treat sleep as optional."
+      "Five years ago in India, I wrote my first function. Today in Boston, I'm architecting full-stack systems while pursuing my MS at Northeastern. The path so far: shipping a nutrition app with ML-powered food recognition to the App Store, building data pipelines that scaled operations 20x, leading a team of 8 engineers, and cutting deployment times from weeks to days.",
+      "Right now, I'm building Supatrack (4.9+ rating on the App Store) with TensorFlow computer vision and FastAPI on AWS. I care about clean code, strong test coverage, and systems that hold up at scale. Looking for a Summer 2026 internship where I can ship meaningful software with a great team."
     ],
     "quickFacts": [
-      "4+ Years Experience",
-      "Flutter Enthusiast",
-      "Performance Optimizer",
+      "4+ Years Production Experience",
+      "Java, Python, TypeScript",
+      "React, Spring Boot, FastAPI",
+      "AWS, Docker, Kubernetes",
+      "ML/AI Integration",
+      "Shipped App Store Product",
       "Open Source Contributor",
-      "Detail-Oriented",
-      "Problem Solver",
-      "Continuous Learner",
-      "Coffee Powered"
+      "Strong Testing Practices"
     ]
   },
   "typingAnimationTexts": [
+    "Software Engineer",
     "Full Stack Developer",
-    "Mobile App and Team Lead",
-    "Problem Solver",
-    "MS CS Student at Northeastern"
+    "MS CS Student at Northeastern",
+    "Seeking Summer 2026 Internship"
   ]
 }

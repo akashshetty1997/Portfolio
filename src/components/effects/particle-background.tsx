@@ -75,7 +75,7 @@ function ParticleBackground() {
     }
 
     // Create particles
-    const particleCount = 100;
+    const particleCount = 60; // Reduced from 100 for better performance
     let particles: Particle[] = [];
 
     const createParticles = () => {
@@ -107,7 +107,13 @@ function ParticleBackground() {
       const maxDistance = 120;
 
       for (let i = 0; i < particles.length; i++) {
+        // Limit connections per particle for performance
+        let connectionsCount = 0;
+        const maxConnections = 3;
+        
         for (let j = i + 1; j < particles.length; j++) {
+          if (connectionsCount >= maxConnections) break;
+          
           const dx = particles[i].x - particles[j].x;
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -123,6 +129,7 @@ function ParticleBackground() {
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
+            connectionsCount++;
           }
         }
 

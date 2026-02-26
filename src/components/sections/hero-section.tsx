@@ -1,7 +1,7 @@
 // src/components/sections/hero-section.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   motion,
   useMotionValue,
@@ -30,7 +30,9 @@ import { toast } from "sonner";
 export function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [isInView, setIsInView] = useState(true);
   const { playClickSound, playHoverSound } = useSoundEffect();
+  const sectionRef = useRef<HTMLElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -39,8 +41,31 @@ export function HeroSection() {
   const mouseXSpring = useSpring(mouseX, springConfig);
   const mouseYSpring = useSpring(mouseY, springConfig);
 
+  // Track if section is in viewport
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+        // Reset hover state when leaving viewport
+        if (!entry.isIntersecting) {
+          setHoveredCard(null);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
+      // Only update if section is in view
+      if (!isInView) return;
+
       const rect = document.body.getBoundingClientRect();
       mouseX.set((e.clientX - rect.left) / rect.width - 0.5);
       mouseY.set((e.clientY - rect.top) / rect.height - 0.5);
@@ -51,9 +76,9 @@ export function HeroSection() {
       });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, isInView]);
 
   const handleDownloadResume = () => {
     playClickSound();
@@ -149,6 +174,7 @@ export function HeroSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-background"
     >
@@ -159,28 +185,28 @@ export function HeroSection() {
 
         {/* Floating Gradient Orbs */}
         <motion.div
-          className="absolute w-[600px] h-[600px] rounded-full"
+          className="absolute w-[600px] h-[600px] rounded-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle, rgba(139,92,246,0.15) 0%, transparent 70%)",
             left: "5%",
             top: "10%",
-            x: mousePosition.x * 30,
-            y: mousePosition.y * 30,
+            x: isInView ? mousePosition.x * 30 : 0,
+            y: isInView ? mousePosition.y * 30 : 0,
           }}
           animate={{ scale: [1, 1.1, 1], rotate: [0, 90, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
 
         <motion.div
-          className="absolute w-[500px] h-[500px] rounded-full"
+          className="absolute w-[500px] h-[500px] rounded-full pointer-events-none"
           style={{
             background:
               "radial-gradient(circle, rgba(239,68,68,0.15) 0%, transparent 70%)",
             right: "5%",
             bottom: "10%",
-            x: mousePosition.x * -20,
-            y: mousePosition.y * -20,
+            x: isInView ? mousePosition.x * -20 : 0,
+            y: isInView ? mousePosition.y * -20 : 0,
           }}
           animate={{ scale: [1.1, 1, 1.1], rotate: [0, -90, 0] }}
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
@@ -313,10 +339,11 @@ export function HeroSection() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.28 }}
                     exit={{ opacity: 0 }}
-                    className="absolute inset-0 pointer-events-none z-10"
+                    className="absolute inset-0 z-10"
                     style={{
                       background:
                         "radial-gradient(90% 70% at 50% 50%, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%)",
+                      pointerEvents: "none",
                     }}
                   />
                 )}
@@ -333,8 +360,8 @@ export function HeroSection() {
                     key={card.id}
                     className="absolute w-72 h-96 cursor-pointer will-change-transform"
                     style={{
-                      rotateY: isHovered ? 0 : (rotateLaptop as unknown as number),
-                      rotateX: isHovered ? 0 : (rotatePhone as unknown as number),
+                      rotateY: isInView && isHovered ? 0 : isInView ? (rotateLaptop as unknown as number) : 0,
+                      rotateX: isInView && isHovered ? 0 : isInView ? (rotatePhone as unknown as number) : 0,
                       zIndex: target.zIndex,
                       mixBlendMode: "normal", // prevent glow blending with siblings
                     }}
@@ -349,8 +376,10 @@ export function HeroSection() {
                     transition={{ type: "spring", damping: 22, stiffness: 180, mass: 1 }}
                     onClick={() => handleCardClick(card.id)}
                     onMouseEnter={() => {
-                      setHoveredCard(card.id);
-                      playHoverSound();
+                      if (isInView) {
+                        setHoveredCard(card.id);
+                        playHoverSound();
+                      }
                     }}
                     onMouseLeave={() => setHoveredCard(null)}
                   >

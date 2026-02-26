@@ -33,10 +33,11 @@ export function SoundProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("soundEnabled", newState.toString());
   };
 
-  const playSound = (_: string) => {
-    // ← Changed from _soundType to just _
+  const playSound = (soundType: string) => {
     // Do nothing when disabled
     if (!SOUND_FEATURE_ENABLED) return;
+    // Placeholder for future sound implementation
+    console.log("Sound:", soundType);
   };
 
   const setBackgroundVolumeHandler = (volume: number) => {

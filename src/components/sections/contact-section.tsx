@@ -75,8 +75,8 @@ function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               {/* Header */}
               <div className="p-4 md:p-6 border-b border-border/50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <FileText className="w-5 h-5 text-primary" />
+                  <div className="p-2 rounded-lg bg-secondary">
+                    <FileText className="w-5 h-5 text-foreground" />
                   </div>
                   <h2 className="text-xl md:text-2xl font-bold">
                     Resume Preview
@@ -120,7 +120,7 @@ function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                     <Button
                       onClick={handleDownload}
                       onMouseEnter={playHoverSound}
-                      className="w-full sm:w-auto bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90"
+                      className="w-full sm:w-auto bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200"
                     >
                       <Download className="w-4 h-4 mr-2" />
                       Download PDF
@@ -157,13 +157,13 @@ export function ContactSection() {
 
   return (
     <section id="contact" className="py-12 md:py-20 relative overflow-hidden" ref={ref}>
-      {/* Background Effects */}
+      {/* Background Effects - monochrome */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/3 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-foreground/3 to-transparent" />
         
-        {/* Animated orbs */}
+        {/* Animated orbs - monochrome */}
         <motion.div
-          className="absolute top-1/4 -left-32 md:-left-48 w-64 md:w-96 h-64 md:h-96 bg-primary/10 rounded-full blur-3xl"
+          className="absolute top-1/4 -left-32 md:-left-48 w-64 md:w-96 h-64 md:h-96 bg-foreground/5 rounded-full blur-3xl"
           animate={{
             x: [0, 30, 0],
             y: [0, -20, 0],
@@ -175,7 +175,7 @@ export function ContactSection() {
           }}
         />
         <motion.div
-          className="absolute bottom-1/4 -right-32 md:-right-48 w-64 md:w-96 h-64 md:h-96 bg-accent/10 rounded-full blur-3xl"
+          className="absolute bottom-1/4 -right-32 md:-right-48 w-64 md:w-96 h-64 md:h-96 bg-foreground/3 rounded-full blur-3xl"
           animate={{
             x: [0, -30, 0],
             y: [0, 20, 0],
@@ -217,8 +217,8 @@ export function ContactSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-2 space-y-4"
           >
-            {/* Status Card */}
-            <Card className="bg-gradient-to-br from-green-500/10 via-emerald-500/10 to-teal-500/10 border-green-500/20">
+            {/* Status Card - monochrome with functional green dot */}
+            <Card className="bg-card border-border">
               <CardContent className="p-4 md:p-6">
                 <div className="flex items-center gap-3">
                   <span className="relative flex h-3 w-3">
@@ -226,7 +226,7 @@ export function ContactSection() {
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-green-400"></span>
                   </span>
                   <div>
-                    <p className="font-semibold text-green-700 dark:text-green-400">
+                    <p className="font-semibold text-foreground">
                       Available for Hire
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -237,12 +237,12 @@ export function ContactSection() {
               </CardContent>
             </Card>
 
-            {/* Location Card */}
-            <Card className="bg-background/60 backdrop-blur-sm border-border/50">
+            {/* Location Card - monochrome icons */}
+            <Card className="bg-card border-border">
               <CardContent className="p-4 md:p-6 space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <MapPin className="w-4 h-4 text-primary" />
+                  <div className="p-2 rounded-lg bg-secondary">
+                    <MapPin className="w-4 h-4 text-foreground" />
                   </div>
                   <div>
                     <p className="font-semibold">{PERSONAL_INFO.location}</p>
@@ -253,8 +253,8 @@ export function ContactSection() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-accent/10">
-                    <Clock className="w-4 h-4 text-accent" />
+                  <div className="p-2 rounded-lg bg-secondary">
+                    <Clock className="w-4 h-4 text-foreground" />
                   </div>
                   <div>
                     <p className="font-semibold">Response Time</p>
@@ -265,8 +265,8 @@ export function ContactSection() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-purple-500/10">
-                    <Calendar className="w-4 h-4 text-purple-500" />
+                  <div className="p-2 rounded-lg bg-secondary">
+                    <Calendar className="w-4 h-4 text-foreground" />
                   </div>
                   <div>
                     <p className="font-semibold">Available</p>
@@ -286,13 +286,12 @@ export function ContactSection() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="lg:col-span-3 space-y-4"
           >
-            {/* Primary Contact Card */}
-            <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+            {/* Primary Contact Card - monochrome */}
+            <Card className="bg-card border-border overflow-hidden">
               <CardContent className="p-4 md:p-6 space-y-4 relative">
                 <div>
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <Send className="w-4 h-4 text-primary" />
+                  <h3 className="font-bold mb-4 flex items-center gap-2">
+                    <Send className="w-4 h-4 text-foreground" />
                     Primary Contact
                   </h3>
                   
@@ -302,11 +301,11 @@ export function ContactSection() {
                     onMouseEnter={playHoverSound}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full p-4 rounded-lg bg-background/50 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all group cursor-pointer"
+                    className="w-full p-4 rounded-lg bg-secondary border border-border hover:border-foreground/20 transition-all duration-200 group cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Mail className="w-5 h-5 text-primary" />
+                        <Mail className="w-5 h-5 text-foreground" />
                         <div className="text-left">
                           <p className="font-medium text-sm md:text-base">
                             {PERSONAL_INFO.email}
@@ -319,7 +318,7 @@ export function ContactSection() {
                       {copiedItem === "Email" ? (
                         <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
                       ) : (
-                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                        <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors flex-shrink-0" />
                       )}
                     </div>
                   </motion.div>
@@ -405,7 +404,7 @@ export function ContactSection() {
                         onMouseEnter={playHoverSound}
                         className="block"
                       >
-                        <Button className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90">
+                        <Button className="w-full h-11 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors duration-200">
                           <Download className="w-4 h-4 mr-2" />
                           Download PDF
                         </Button>

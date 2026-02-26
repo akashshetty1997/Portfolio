@@ -67,12 +67,12 @@ export function LoadingScreen({
 				>
 					{/* Animated Background */}
 					<div className="absolute inset-0">
-						{/* Gradient mesh */}
-						<div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-background to-red-500/10" />
+						{/* Gradient mesh - monochrome */}
+						<div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-background to-foreground/3" />
 
-						{/* Animated orbs */}
+						{/* Animated orbs - monochrome */}
 						<motion.div
-							className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+							className="absolute top-1/4 left-1/4 w-96 h-96 bg-foreground/5 rounded-full blur-3xl"
 							animate={{
 								x: [0, 100, 0],
 								y: [0, -50, 0],
@@ -84,7 +84,7 @@ export function LoadingScreen({
 							}}
 						/>
 						<motion.div
-							className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl"
+							className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-foreground/3 rounded-full blur-3xl"
 							animate={{
 								x: [0, -100, 0],
 								y: [0, 50, 0],
@@ -97,7 +97,7 @@ export function LoadingScreen({
 						/>
 
 						{/* Grid pattern */}
-						<div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f0a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f0a_1px,transparent_1px)] bg-[size:50px_50px]" />
+						<div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-[size:50px_50px]" />
 					</div>
 
 					{/* Main Content */}
@@ -114,7 +114,7 @@ export function LoadingScreen({
 									className="text-center"
 								>
 									{/* Greeting Text */}
-									<h1 className="text-6xl md:text-8xl font-bold bg-gradient-to-r from-purple-600 via-red-500 to-purple-600 bg-clip-text text-transparent bg-[length:200%_200%] animate-gradient">
+									<h1 className="text-6xl md:text-8xl font-bold text-foreground">
 										{greetings[currentIndex].text}
 									</h1>
 								</motion.div>
@@ -122,7 +122,7 @@ export function LoadingScreen({
 						</div>
 					</div>
 
-					{/* Decorative Elements */}
+					{/* Decorative Elements - monochrome borders */}
 					<div className="absolute bottom-10 left-10">
 						<motion.div
 							animate={{
@@ -133,7 +133,7 @@ export function LoadingScreen({
 								repeat: Infinity,
 								ease: "linear",
 							}}
-							className="w-20 h-20 border-2 border-purple-500/20 rounded-full"
+							className="w-20 h-20 border-2 border-border rounded-full"
 						/>
 					</div>
 
@@ -147,15 +147,15 @@ export function LoadingScreen({
 								repeat: Infinity,
 								ease: "linear",
 							}}
-							className="w-16 h-16 border-2 border-red-500/20 rounded-lg"
+							className="w-16 h-16 border-2 border-border rounded-lg"
 						/>
 					</div>
 
-					{/* Floating dots */}
+					{/* Floating dots - monochrome */}
 					{[...Array(5)].map((_, i) => (
 						<motion.div
 							key={i}
-							className="absolute w-1 h-1 bg-primary/30 rounded-full"
+							className="absolute w-1 h-1 bg-foreground/30 rounded-full"
 							style={{
 								left: `${20 + i * 15}%`,
 								top: `${30 + i * 10}%`,

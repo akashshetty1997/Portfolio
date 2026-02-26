@@ -3,17 +3,19 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { NAVIGATION_ITEMS, PERSONAL_INFO } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { useSoundEffect } from "@/hooks/use-sound";
+import { useTheme } from "@/components/providers/theme-provider";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const { playClickSound, playHoverSound } = useSoundEffect();
+  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,7 +82,7 @@ export function Navigation() {
           </motion.a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-6">
             {NAVIGATION_ITEMS.map((item) => (
               <motion.a
                 key={item.label}
@@ -90,9 +92,9 @@ export function Navigation() {
                   handleNavClick(item.href);
                 }}
                 className={cn(
-                  "relative text-sm font-medium transition-colors hover:text-primary",
+                  "relative text-sm font-medium transition-colors duration-200 hover:text-foreground",
                   activeSection === item.href.slice(1)
-                    ? "text-primary"
+                    ? "text-foreground font-medium"
                     : "text-muted-foreground"
                 )}
                 onHoverStart={playHoverSound}
@@ -102,17 +104,48 @@ export function Navigation() {
                 {item.label}
                 {activeSection === item.href.slice(1) && (
                   <motion.span
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-foreground"
                     layoutId="activeSection"
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}
               </motion.a>
             ))}
+            
+            {/* Theme Toggle Button */}
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => {
+                  playClickSound();
+                  toggleTheme();
+                }}
+                onMouseEnter={playHoverSound}
+                className="relative w-9 h-9"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </motion.div>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Mobile Menu Button & Theme Toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => {
+                playClickSound();
+                toggleTheme();
+              }}
+              className="relative w-9 h-9"
+            >
+              <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              <span className="sr-only">Toggle theme</span>
+            </Button>
             <Button
               size="icon"
               variant="ghost"
@@ -151,9 +184,9 @@ export function Navigation() {
                       handleNavClick(item.href);
                     }}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-primary",
+                      "text-sm font-medium transition-colors duration-200 hover:text-foreground",
                       activeSection === item.href.slice(1)
-                        ? "text-primary"
+                        ? "text-foreground font-medium"
                         : "text-muted-foreground"
                     )}
                     initial={{ opacity: 0, x: -20 }}

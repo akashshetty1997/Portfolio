@@ -23,13 +23,6 @@ import { useSoundEffect } from "@/hooks/use-sound";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-const PROJECT_COLORS = [
-  { gradient: "from-violet-600 to-purple-500", bg: "bg-violet-500/10", text: "text-violet-400" },
-  { gradient: "from-blue-600 to-cyan-500", bg: "bg-blue-500/10", text: "text-blue-400" },
-  { gradient: "from-emerald-600 to-teal-500", bg: "bg-emerald-500/10", text: "text-emerald-400" },
-  { gradient: "from-orange-600 to-amber-500", bg: "bg-orange-500/10", text: "text-orange-400" },
-];
-
 function ProjectImage({
   project,
   index,
@@ -40,22 +33,20 @@ function ProjectImage({
   className?: string;
 }) {
   const [imgError, setImgError] = useState(false);
-  const color = PROJECT_COLORS[index % PROJECT_COLORS.length];
 
   if (!project.image || imgError) {
     return (
       <div
         className={cn(
-          "flex items-center justify-center bg-gradient-to-br",
-          color.gradient,
+          "flex items-center justify-center bg-muted",
           className
         )}
       >
         <div className="text-center px-4">
-          <h3 className="text-2xl md:text-3xl font-bold text-white/90 tracking-tight">
+          <h3 className="text-2xl md:text-3xl font-bold text-muted-foreground tracking-tight">
             {project.title}
           </h3>
-          <p className="text-sm text-white/60 mt-2">{project.role}</p>
+          <p className="text-sm text-muted-foreground/60 mt-2">{project.role}</p>
         </div>
       </div>
     );
@@ -99,8 +90,6 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
     return allImages.slice(startIndex, startIndex + 2);
   };
 
-  const color = PROJECT_COLORS[projectIndex % PROJECT_COLORS.length];
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -141,17 +130,12 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                         transition={{ type: "spring", stiffness: 300, damping: 30 }}
                       >
                         {allImages.length === 0 ? (
-                          <div
-                            className={cn(
-                              "h-[280px] lg:h-[360px] flex items-center justify-center bg-gradient-to-br rounded-xl",
-                              color.gradient
-                            )}
-                          >
+                          <div className="h-[280px] lg:h-[360px] flex items-center justify-center bg-muted rounded-xl">
                             <div className="text-center px-6">
-                              <h3 className="text-3xl font-bold text-white/90">
+                              <h3 className="text-3xl font-bold text-muted-foreground">
                                 {project.title}
                               </h3>
-                              <p className="text-sm text-white/60 mt-2">
+                              <p className="text-sm text-muted-foreground/60 mt-2">
                                 {project.role}
                               </p>
                             </div>
@@ -259,7 +243,7 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                     </motion.button>
                   )}
                   {project.isprivate && (
-                    <div className="px-4 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm font-medium flex items-center gap-2 text-amber-600 dark:text-amber-400">
+                    <div className="px-4 py-2 rounded-lg bg-secondary border border-border text-sm font-medium flex items-center gap-2 text-muted-foreground">
                       <Lock className="w-4 h-4" />
                       Private Repo
                     </div>
@@ -272,7 +256,7 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                       }}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-white text-sm font-medium flex items-center gap-2"
+                      className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors text-sm font-medium flex items-center gap-2"
                     >
                       <Globe className="w-4 h-4" />
                       Live Demo
@@ -304,7 +288,7 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-2">
                       Overview
                     </h3>
                     <p className="text-muted-foreground leading-relaxed">
@@ -313,7 +297,7 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
                       Key Achievements
                     </h3>
                     <div className="space-y-2">
@@ -335,7 +319,7 @@ function ProjectModal({ project, projectIndex, isOpen, onClose }: ProjectModalPr
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+                    <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-3">
                       Tech Stack
                     </h3>
                     <div className="flex flex-wrap gap-1.5">
@@ -399,7 +383,7 @@ export function ProjectsSection() {
             className="max-w-5xl mx-auto mb-8"
           >
             <Card
-              className="group bg-background/60 backdrop-blur-sm border-border/50 hover:border-primary/40 transition-all duration-300 cursor-pointer overflow-hidden"
+              className="group bg-card border-border hover:border-foreground/20 transition-all duration-300 cursor-pointer overflow-hidden"
               onClick={() => {
                 playClickSound();
                 setSelectedProject({ project: PROJECTS[0], index: 0 });
@@ -407,7 +391,7 @@ export function ProjectsSection() {
             >
               <div className="flex flex-col md:flex-row">
                 {/* Image */}
-                <div className="relative md:w-2/5 h-56 md:h-auto bg-gradient-to-br from-primary/10 to-accent/10 overflow-hidden">
+                <div className="relative md:w-2/5 h-56 md:h-auto bg-muted overflow-hidden">
                   <ProjectImage
                     project={PROJECTS[0]}
                     index={0}
@@ -415,8 +399,10 @@ export function ProjectsSection() {
                   />
                   {PROJECTS[0].live && (
                     <div className="absolute top-3 left-3">
-                      <Badge className="bg-green-500/90 text-white text-xs border-0">
-                        <Globe className="w-3 h-3 mr-1" />
+                      <Badge variant="secondary" className="text-xs">
+                        <span className="relative flex h-1.5 w-1.5 mr-1.5">
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-foreground" />
+                        </span>
                         Live
                       </Badge>
                     </div>
@@ -458,7 +444,7 @@ export function ProjectsSection() {
 
                   <div className="flex items-center gap-4 text-sm">
                     {PROJECTS[0].isprivate && (
-                      <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 text-xs">
+                      <span className="flex items-center gap-1 text-muted-foreground text-xs">
                         <Lock className="w-3 h-3" />
                         Private
                       </span>
@@ -513,7 +499,7 @@ export function ProjectsSection() {
                 onMouseEnter={playHoverSound}
               >
                 <Card
-                  className="group h-full bg-background/60 backdrop-blur-sm border-border/50 hover:border-primary/40 transition-all duration-300 cursor-pointer overflow-hidden"
+                  className="group h-full bg-card border-border hover:border-foreground/20 transition-all duration-300 cursor-pointer overflow-hidden"
                   onClick={() => {
                     playClickSound();
                     setSelectedProject({ project, index: actualIndex });
@@ -566,7 +552,7 @@ export function ProjectsSection() {
 
                     <div className="flex items-center gap-3 text-xs pt-2 border-t border-border/40">
                       {project.isprivate && (
-                        <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                        <span className="flex items-center gap-1 text-muted-foreground">
                           <Lock className="w-3 h-3" />
                           Private
                         </span>

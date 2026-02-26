@@ -74,7 +74,6 @@ export interface Video {
 }
 
 export interface Skill {
-  icon: string;
   skills: string[];
 }
 

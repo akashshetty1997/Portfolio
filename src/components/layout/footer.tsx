@@ -71,7 +71,7 @@ export function Footer() {
                 animate={{ scale: [1, 1.2, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                <Heart className="w-4 h-4 text-red-500 inline" />
+                <Heart className="w-4 h-4 text-foreground inline" />
               </motion.span>
               and
               <Code2 className="w-4 h-4 inline" />

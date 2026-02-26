@@ -65,7 +65,7 @@ export function AboutSection() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="max-w-6xl mx-auto mb-8"
         >
-          <Card className="bg-background/60 backdrop-blur-sm border-border/50 hover:border-border/80 transition-all duration-300">
+          <Card className="bg-card border-border hover:border-foreground/20 transition-colors duration-200">
             <CardContent className="p-6 md:p-8">
               <div className="flex flex-col md:flex-row gap-6 items-start">
                 {/* Avatar */}
@@ -74,17 +74,15 @@ export function AboutSection() {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 300 }}
                 >
-                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-primary to-accent p-[2px]">
-                    <div className="w-full h-full rounded-2xl bg-background overflow-hidden">
-                      <Image
-                        src="/images/Profile.png"
-                        alt={PERSONAL_INFO.name}
-                        width={112}
-                        height={112}
-                        className="w-full h-full object-cover rounded-2xl"
-                        priority
-                      />
-                    </div>
+                  <div className="w-24 h-24 md:w-28 md:h-28 rounded-2xl border-2 border-border overflow-hidden">
+                    <Image
+                      src="/images/Profile.png"
+                      alt={PERSONAL_INFO.name}
+                      width={112}
+                      height={112}
+                      className="w-full h-full object-cover"
+                      priority
+                    />
                   </div>
                 </motion.div>
 
@@ -132,11 +130,11 @@ export function AboutSection() {
           {highlights.map((item, index) => (
             <motion.div
               key={index}
-              className="text-center p-4 rounded-xl bg-background/60 backdrop-blur-sm border border-border/50 hover:border-primary/50 transition-all duration-300"
+              className="text-center p-4 rounded-xl bg-card border border-border hover:border-foreground/30 transition-colors duration-200"
               whileHover={{ y: -4 }}
               onHoverStart={playHoverSound}
             >
-              <item.icon className="w-5 h-5 mx-auto mb-2 text-primary" />
+              <item.icon className="w-5 h-5 mx-auto mb-2 text-foreground" />
               <p className="text-xl font-bold">{item.label}</p>
               <p className="text-xs text-muted-foreground">{item.sublabel}</p>
             </motion.div>
@@ -150,14 +148,14 @@ export function AboutSection() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="max-w-6xl mx-auto"
         >
-          <Card className="bg-background/60 backdrop-blur-sm border-border/50 hover:border-border/80 transition-all duration-300">
+          <Card className="bg-card border-border hover:border-foreground/20 transition-colors duration-200">
             <CardContent className="p-6">
               {/* Header */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <GraduationCap className="w-5 h-5 text-primary" />
+                <div className="p-2 rounded-lg bg-secondary">
+                  <GraduationCap className="w-5 h-5 text-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold">Education</h3>
+                <h3 className="text-lg font-bold">Education</h3>
               </div>
 
               {/* Education Grid */}
@@ -165,7 +163,7 @@ export function AboutSection() {
                 {EDUCATION.map((edu, index) => (
                   <motion.div
                     key={index}
-                    className="p-4 rounded-lg bg-muted/30 border border-border/30 hover:border-border/50 transition-all"
+                    className="p-4 rounded-lg bg-card border border-border hover:border-foreground/20 transition-colors duration-200"
                     whileHover={{ y: -2 }}
                     onHoverStart={playHoverSound}
                   >
@@ -204,33 +202,15 @@ export function AboutSection() {
 
                       {/* GPA */}
                       {edu.gpa && (
-                        <div
-                          className={`flex items-center justify-between p-3 rounded-lg border ${
-                            index === 0
-                              ? "bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20"
-                              : "bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20"
-                          }`}
-                        >
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-secondary border border-border">
                           <div className="flex items-center gap-2">
-                            <Award
-                              className={`w-4 h-4 ${
-                                index === 0
-                                  ? "text-primary"
-                                  : "text-green-500"
-                              }`}
-                            />
+                            <Award className="w-4 h-4 text-foreground" />
                             <span className="text-sm font-medium">
                               {index === 0 ? "Current GPA" : "Final GPA"}
                             </span>
                           </div>
                           <div className="text-right">
-                            <span
-                              className={`text-lg font-bold ${
-                                index === 0
-                                  ? "text-primary"
-                                  : "text-green-500"
-                              }`}
-                            >
+                            <span className="text-lg font-bold text-foreground">
                               {edu.gpa.split("/")[0]}
                             </span>
                             <span className="text-sm text-muted-foreground">

@@ -294,7 +294,7 @@ function VideoPlayer({ title, duration, videoSrc, transcript }: VideoPlayerProps
           {/* Title and Duration */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold">{title}</h3>
+              <h3 className="text-lg font-bold">{title}</h3>
               <div className="flex items-center gap-3 mt-1">
                 <Badge variant="secondary" className="text-xs">
                   <Clock className="w-3 h-3 mr-1" />
@@ -444,9 +444,9 @@ export function VideoSection() {
 
   return (
     <section id="video-section" className="py-20 relative overflow-hidden" ref={ref}>
-      {/* Subtle Background */}
+      {/* Subtle Background - monochrome */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-red-500/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-foreground/5 via-transparent to-foreground/3" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f05_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f05_1px,transparent_1px)] bg-[size:50px_50px]" />
       </div>
 
@@ -479,7 +479,7 @@ export function VideoSection() {
                 key={video.id}
                 value={video.id}
                 onMouseEnter={playHoverSound}
-                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600/10 data-[state=active]:to-red-600/10 data-[state=active]:border-primary/20"
+                className="data-[state=active]:bg-secondary data-[state=active]:border-border"
               >
                 <Film className="w-4 h-4 mr-2" />
                 {video.title}

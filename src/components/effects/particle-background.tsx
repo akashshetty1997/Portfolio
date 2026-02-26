@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useTheme } from "next-themes";
+import { useTheme } from "@/components/providers/theme-provider";
 
 function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -44,13 +44,8 @@ function ParticleBackground() {
         this.speedY = Math.random() * 0.5 - 0.25;
         this.opacity = Math.random() * 0.5 + 0.2;
 
-        // Use theme colors
-        const colors = [
-          "222, 62, 76", // bright-red
-          "60, 24, 116", // pure-purple
-          "147, 36, 50", // deep-red
-        ];
-        this.color = colors[Math.floor(Math.random() * colors.length)];
+        // Monochrome - use foreground color with varying opacity
+        this.color = "128, 128, 128"; // neutral gray
       }
 
       update(width: number, height: number) {
@@ -120,10 +115,8 @@ function ParticleBackground() {
 
           if (distance < maxDistance) {
             const opacity = (1 - distance / maxDistance) * 0.3;
-            ctx.strokeStyle =
-              theme === "dark"
-                ? `rgba(222, 62, 76, ${opacity})` // bright-red in dark mode
-                : `rgba(60, 24, 116, ${opacity})`; // pure-purple in light mode
+            // Monochrome line color
+            ctx.strokeStyle = `rgba(128, 128, 128, ${opacity * 0.5})`;
             ctx.lineWidth = 0.5;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
@@ -133,7 +126,7 @@ function ParticleBackground() {
           }
         }
 
-        // Connect to mouse
+        // Connect to mouse - monochrome
         if (isMouseMoving) {
           const dx = particles[i].x - mouseX;
           const dy = particles[i].y - mouseY;
@@ -141,7 +134,7 @@ function ParticleBackground() {
 
           if (distance < maxDistance) {
             const opacity = (1 - distance / maxDistance) * 0.5;
-            ctx.strokeStyle = `rgba(222, 62, 76, ${opacity})`;
+            ctx.strokeStyle = `rgba(128, 128, 128, ${opacity})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);

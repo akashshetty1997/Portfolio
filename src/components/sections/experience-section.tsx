@@ -57,7 +57,7 @@ export function ExperienceSection() {
             className="absolute left-[19px] md:left-[23px] top-2 bottom-2 w-px"
             style={{
               background:
-                "linear-gradient(to bottom, hsl(var(--primary) / 0.4), hsl(var(--primary) / 0.15))",
+                "linear-gradient(to bottom, hsl(var(--border)), hsl(var(--border) / 0.3))",
             }}
             initial={{ scaleY: 0, originY: 0 }}
             animate={isInView ? { scaleY: 1 } : {}}
@@ -79,10 +79,10 @@ export function ExperienceSection() {
               {/* Timeline node */}
               <div className="absolute left-0 top-1">
                 <motion.div
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-primary/30 bg-background flex items-center justify-center group-hover:border-primary/60 transition-colors duration-300"
+                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-border bg-background flex items-center justify-center group-hover:border-foreground/50 transition-colors duration-300"
                   whileHover={{ scale: 1.1 }}
                 >
-                  <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-primary/60 group-hover:bg-primary transition-colors duration-300" />
+                  <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-foreground group-hover:bg-foreground transition-colors duration-300" />
                 </motion.div>
               </div>
 
@@ -114,7 +114,7 @@ export function ExperienceSection() {
                     {Object.entries(exp.achievements).map(([key, value]) => (
                       <span
                         key={key}
-                        className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-primary/10 text-primary"
+                        className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-secondary text-secondary-foreground"
                       >
                         <Circle className="w-1.5 h-1.5 fill-current" />
                         {value}
@@ -160,8 +160,8 @@ export function ExperienceSection() {
             className="relative pl-14 md:pl-16 pt-2"
           >
             <div className="absolute left-0 top-2">
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-dashed border-primary/30 bg-background flex items-center justify-center">
-                <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-primary/30 animate-pulse" />
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-dashed border-border bg-background flex items-center justify-center">
+                <div className="w-3 h-3 md:w-3.5 md:h-3.5 rounded-full bg-foreground/30 animate-pulse" />
               </div>
             </div>
             <p className="text-sm text-muted-foreground pt-2.5">

@@ -3,7 +3,6 @@
   "sectionSubtitle": "A comprehensive toolkit for building modern applications",
   "categories": {
     "Programming Languages": {
-      "icon": "💻",
       "skills": [
         "Java",
         "Python",
@@ -18,7 +17,6 @@
       ]
     },
     "Frontend & Mobile": {
-      "icon": "🎨",
       "skills": [
         "React",
         "Next.js",
@@ -32,7 +30,6 @@
       ]
     },
     "Backend": {
-      "icon": "⚙️",
       "skills": [
         "Spring Boot",
         "FastAPI",
@@ -47,7 +44,6 @@
       ]
     },
     "Databases": {
-      "icon": "🗄️",
       "skills": [
         "PostgreSQL",
         "MySQL",
@@ -58,7 +54,6 @@
       ]
     },
     "Cloud & DevOps": {
-      "icon": "☁️",
       "skills": [
         "AWS (EC2, S3, Lambda)",
         "GCP",
@@ -73,7 +68,6 @@
       ]
     },
     "ML/AI & Data": {
-      "icon": "🤖",
       "skills": [
         "TensorFlow",
         "PyTorch",
@@ -88,7 +82,6 @@
       ]
     },
     "Testing & Quality": {
-      "icon": "✅",
       "skills": [
         "JUnit",
         "Mockito",

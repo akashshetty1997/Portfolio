@@ -165,16 +165,16 @@ export function GitHubSection() {
   ];
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // GitHub's contribution color levels
+  // Monochrome contribution color levels
   const getContributionColor = (count: number) => {
     if (count === 0) return "bg-muted hover:bg-muted/80";
     if (count === 1)
-      return "bg-emerald-200 dark:bg-emerald-900/50 hover:bg-emerald-300 dark:hover:bg-emerald-900/70";
+      return "bg-foreground/20 hover:bg-foreground/30";
     if (count === 2)
-      return "bg-emerald-400 dark:bg-emerald-700/50 hover:bg-emerald-500 dark:hover:bg-emerald-700/70";
+      return "bg-foreground/40 hover:bg-foreground/50";
     if (count === 3)
-      return "bg-emerald-600 dark:bg-emerald-600/50 hover:bg-emerald-700 dark:hover:bg-emerald-600/70";
-    return "bg-emerald-800 dark:bg-emerald-500/50 hover:bg-emerald-900 dark:hover:bg-emerald-500/70";
+      return "bg-foreground/60 hover:bg-foreground/70";
+    return "bg-foreground/80 hover:bg-foreground/90";
   };
 
   // Get organized data for display
@@ -225,7 +225,7 @@ export function GitHubSection() {
                     <Activity className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold">
+                    <h3 className="text-lg font-bold">
                       Contribution Activity
                     </h3>
                     <p className="text-sm text-muted-foreground">

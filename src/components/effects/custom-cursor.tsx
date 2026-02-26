@@ -8,14 +8,10 @@ export function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isPointer, setIsPointer] = useState(false);
 
   const cursorDotRef = useRef<HTMLDivElement>(null);
   const cursorRingRef = useRef<HTMLDivElement>(null);
-
-  // ✅ Initialize with null and type as number | null
   const requestRef = useRef<number | null>(null);
-
   const mousePos = useRef({ x: -100, y: -100 });
   const currentPos = useRef({ x: -100, y: -100 });
 
@@ -55,13 +51,11 @@ export function CustomCursor() {
         ) || !!target.closest("a, button, [role='button']");
       if (isInteractive) {
         setIsHovered(true);
-        setIsPointer(true);
       }
     };
 
     const handleMouseOut = () => {
       setIsHovered(false);
-      setIsPointer(false);
     };
 
     const handleMouseDown = () => setIsClicked(true);
@@ -70,7 +64,6 @@ export function CustomCursor() {
       mousePos.current = { x: -100, y: -100 };
     };
 
-    // Start loop
     requestRef.current = requestAnimationFrame(updateCursor);
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -96,21 +89,17 @@ export function CustomCursor() {
     };
   }, []);
 
-  // Apply cursor: none to body on mount
   useEffect(() => {
     if (!isVisible) return;
-    
-    // Add cursor: none to document root
-    document.documentElement.style.cursor = 'none';
-    document.body.style.cursor = 'none';
-    
-    // Add class to body for CSS targeting
-    document.body.classList.add('custom-cursor-active');
-    
+
+    document.documentElement.style.cursor = "none";
+    document.body.style.cursor = "none";
+    document.body.classList.add("custom-cursor-active");
+
     return () => {
-      document.documentElement.style.cursor = '';
-      document.body.style.cursor = '';
-      document.body.classList.remove('custom-cursor-active');
+      document.documentElement.style.cursor = "";
+      document.body.style.cursor = "";
+      document.body.classList.remove("custom-cursor-active");
     };
   }, [isVisible]);
 
@@ -118,11 +107,10 @@ export function CustomCursor() {
 
   return (
     <>
-
-      {/* Dot */}
+      {/* Dot - uses foreground color, no mix-blend-difference */}
       <div
         ref={cursorDotRef}
-        className="pointer-events-none fixed left-0 top-0 z-[10001] mix-blend-difference"
+        className="pointer-events-none fixed left-0 top-0 z-[10001]"
         style={{ willChange: "transform" }}
       >
         <AnimatePresence>
@@ -137,15 +125,15 @@ export function CustomCursor() {
             }}
           >
             <div
-              className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                isHovered ? "bg-white scale-150" : "bg-white"
+              className={`w-2 h-2 rounded-full transition-all duration-200 bg-foreground ${
+                isHovered ? "scale-150" : ""
               }`}
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Ring */}
+      {/* Ring - monochrome border, no colored gradient */}
       <div
         ref={cursorRingRef}
         className="pointer-events-none fixed left-0 top-0 z-[10000]"
@@ -166,12 +154,14 @@ export function CustomCursor() {
             }}
           >
             <div
-              className={`w-10 h-10 rounded-full border transition-all duration-300 ${
-                isHovered ? "border-primary border-2" : "border-white/50 border"
-              } ${isPointer ? "animate-pulse" : ""}`}
+              className={`w-10 h-10 rounded-full transition-all duration-300 ${
+                isHovered
+                  ? "border-2 border-foreground"
+                  : "border border-foreground/30"
+              }`}
               style={{
                 background: isHovered
-                  ? "radial-gradient(circle, transparent 40%, rgba(139, 92, 246, 0.1) 100%)"
+                  ? "radial-gradient(circle, transparent 40%, hsl(var(--foreground) / 0.05) 100%)"
                   : "transparent",
               }}
             />

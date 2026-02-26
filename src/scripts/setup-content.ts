@@ -283,7 +283,6 @@ const contentFiles = {
     sectionSubtitle: "A comprehensive toolkit for building modern applications",
     categories: {
       "Programming Languages": {
-        icon: "💻",
         skills: [
           "Java",
           "Python",
@@ -297,7 +296,6 @@ const contentFiles = {
         ],
       },
       "Frontend & Mobile": {
-        icon: "🎨",
         skills: [
           "React",
           "Next.js",
@@ -309,7 +307,6 @@ const contentFiles = {
         ],
       },
       Backend: {
-        icon: "⚙️",
         skills: [
           "Spring Boot",
           "FastAPI",
@@ -320,8 +317,7 @@ const contentFiles = {
           "WebSocket",
         ],
       },
-      "Databases & Messaging": {
-        icon: "🗄️",
+      "Databases": {
         skills: [
           "PostgreSQL",
           "MySQL",
@@ -331,7 +327,6 @@ const contentFiles = {
         ],
       },
       "Cloud & DevOps": {
-        icon: "☁️",
         skills: [
           "AWS (EC2, S3, Lambda)",
           "Docker",
@@ -343,7 +338,6 @@ const contentFiles = {
         ],
       },
       "ML/AI & Data": {
-        icon: "🤖",
         skills: [
           "TensorFlow",
           "PyTorch",
@@ -357,7 +351,6 @@ const contentFiles = {
         ],
       },
       "Testing & Quality": {
-        icon: "✅",
         skills: [
           "JUnit",
           "Mockito",

@@ -151,23 +151,25 @@ export function ExperienceSection() {
                     </div>
                   )}
 
-                  {/* Tech Stack Tags */}
-                  <div>
-                    <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase block mb-4 border-b border-foreground/10 pb-2">
-                      Tech Stack
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {exp.technologies.map((tech, idx) => (
-                        <Badge
-                          key={idx}
-                          variant="outline"
-                          className="rounded-none border-border bg-transparent text-[10px] font-mono tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors"
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
+                  {/* Tech Stack Tags - only render when populated */}
+                  {exp.technologies && exp.technologies.length > 0 && (
+                    <div>
+                      <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase block mb-4 border-b border-foreground/10 pb-2">
+                        Tech Stack
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {exp.technologies.map((tech, idx) => (
+                          <Badge
+                            key={idx}
+                            variant="outline"
+                            className="rounded-none border-border bg-transparent text-[10px] font-mono tracking-widest uppercase hover:bg-foreground hover:text-background transition-colors"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
               </div>
@@ -186,7 +188,7 @@ export function ExperienceSection() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-10 px-4 md:px-6 items-center">
               <div className="lg:col-span-3 font-mono text-xs uppercase tracking-widest text-primary flex items-center gap-2">
                 <span className="w-2 h-2 bg-primary animate-pulse" />
-                Summer 2026
+                Fall 2026
               </div>
               <div className="lg:col-span-6 flex items-center gap-4">
                 <Terminal className="w-8 h-8 text-muted-foreground/50" />

@@ -48,6 +48,43 @@
       "isprivate": true
     },
     {
+      "title": "Derm Platform",
+      "description": "Multimodal AI system for skin lesion classification combining vision, clinical text, and dermoscopy features. Deployed full-stack with clinical reasoning powered by MedGemma 4B.",
+      "longDescription": "Led a 7-person team building a multimodal skin cancer detection system across three graduate courses at Northeastern. Combined a MedSigLIP vision encoder, ClinicalBERT text encoder, and 14-dimensional handcrafted ABCD dermoscopy features through cross-attention fusion. Reached 0.76 macro F1 on six-class classification of the PAD-UFES-20 dataset. Deployed end-to-end as a web platform with clinical reasoning generated locally on a GPU-backed inference service.",
+      "duration": "Jan 2026 - Apr 2026",
+      "role": "Team Lead",
+      "highlights": [
+        "Architected multimodal fusion model combining MedSigLIP vision encoder, ClinicalBERT text encoder, and handcrafted ABCD dermoscopy features through cross-attention with 8 heads.",
+        "Achieved 0.7558 macro F1 and 0.9494 ROC-AUC on six-class skin lesion classification across 2,298 PAD-UFES-20 images, with bootstrap confidence intervals across 1000 iterations.",
+        "Ran ablation study proving text stream contributes +0.4021 macro F1 over image-only baseline (0.3537), with BCC class F1 collapsing from 0.75 to 0.08 without text.",
+        "Built and deployed full-stack platform with Next.js frontend on Vercel, Go API gateway, FastAPI inference service, ChromaDB RAG service, and MedGemma 4B clinical reasoning via llama.cpp on AWS EC2 with NVIDIA T4 GPU.",
+        "Led 7-person team spanning CS5330 Computer Vision, CS6120 NLP, and ML coursework using PR-based GitHub workflow with Ruff, pytest, and pre-commit hooks."
+      ],
+      "technologies": [
+        "PyTorch",
+        "MedSigLIP",
+        "ClinicalBERT",
+        "Python",
+        "FastAPI",
+        "Go",
+        "Next.js",
+        "TypeScript",
+        "Tailwind CSS",
+        "shadcn/ui",
+        "MedGemma",
+        "llama.cpp",
+        "ChromaDB",
+        "Docker Compose",
+        "AWS EC2",
+        "nginx"
+      ],
+      "github": null,
+      "live": "https://www.derm-platform.me/",
+      "image": "/images/derm-platform.png",
+      "screenshots": [],
+      "isprivate": true
+    },
+    {
       "title": "DevMatch",
       "description": "Full-stack developer-recruiter matching platform with role-based access, social features, and GitHub integration.",
       "longDescription": "Built a matching platform where developers and recruiters connect through profiles, feeds, and social features. Three user types with different permissions. GitHub API pulls in developer stats automatically.",

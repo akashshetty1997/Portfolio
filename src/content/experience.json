@@ -3,6 +3,19 @@
   "sectionSubtitle": "4+ years of building scalable applications and leading development teams",
   "items": [
     {
+      "title": "Software Development Engineer Intern (Incoming)",
+      "company": "Amazon",
+      "location": "Palo Alto, CA",
+      "duration": "Jun 2026 - Sep 2026",
+      "description": [
+        "Incoming SDE Intern on the Amazon Search team for Summer 2026.",
+        "Will be working on systems powering product search and discovery at Amazon scale.",
+        "Project scope and specific responsibilities to be announced."
+      ],
+      "technologies": [],
+      "achievements": null
+    },
+    {
       "title": "Software Engineer",
       "company": "Goodpass",
       "location": "Bangalore, India",
